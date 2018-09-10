@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - 'node'
+cache: yarn
+install:
+  - apt-get install sshpass
+  - yarn install
+script:
+  - yarn build
+after_script:
+  - sshpass -p scp dist/* $SSH_PASS $SSH_USER@$SSH_IP:/usr/share/nginx/html/lab
+branches:
+  only:
+    - master
