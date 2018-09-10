@@ -7,8 +7,8 @@ node_js:
 # cache: yarn
 before_install:
   - sudo apt-get install -y sshpass
-# install:
-#   - yarn install
+install:
+  - echo haha
 # script:
 #   - yarn build
 after_script:
