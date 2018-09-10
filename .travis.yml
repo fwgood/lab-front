@@ -7,6 +7,7 @@ install:
 script:
   - yarn build
 after_script:
+  - sudo apt-get install -y sshpass
   - sshpass -p scp dist/* $SSH_PASS $SSH_USER@$SSH_IP:/usr/share/nginx/html/lab
 branches:
   only:
