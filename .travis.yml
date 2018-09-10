@@ -12,7 +12,7 @@ install:
 script:
   - yarn build
 after_script:
-  - echo "$SSH_KNOWN_HOST" > ~/.ssh/known_host
+  - echo "$SSH_KNOWN_HOST" > ~/.ssh/known_hosts
   - echo "$SSH_KNOWN_HOST"
   - sshpass -p $SSH_PASS scp -r dist/*  $SSH_USER@$SSH_IP:/usr/share/nginx/html/lab
 branches:
