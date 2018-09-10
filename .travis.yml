@@ -1,7 +1,12 @@
 language: node_js
+dist: xenial
+sudo: required
+
 node_js:
   - 'node'
 cache: yarn
+before_install:
+  - sudo apt-get install -y sshpass
 install:
   - yarn install
 script:
