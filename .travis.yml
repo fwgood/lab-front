@@ -4,15 +4,16 @@ sudo: required
 
 node_js:
   - 'node'
-# cache: yarn
+cache: yarn
 before_install:
   - sudo apt-get install -y sshpass
 install:
-  - echo haha
-# script:
-#   - yarn build
+  - yarn install
+script:
+  - yarn build
 after_script:
-  - sshpass -p $SSH_PASS scp package.json  $SSH_USER@$SSH_IP:/usr/share/nginx/html/lab
+  - mkdir ~/.ssh/; echo "$SSH_KNOWN_HOST" > ~/.ssh/known_host
+  - sshpass -p $SSH_PASS scp -r dist/*  $SSH_USER@$SSH_IP:/usr/share/nginx/html/lab
 branches:
   only:
     - master
