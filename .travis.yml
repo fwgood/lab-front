@@ -13,7 +13,7 @@ script:
   - yarn build
 after_script:
   - echo "$SSH_KNOWN_HOST" > ~/.ssh/known_hosts
-  - sshpass -p $SSH_PASS scp dist/*  $SSH_USER@$SSH_IP:/usr/share/nginx/html/lab
+  - sshpass -p $SSH_PASS scp -r dist/*  $SSH_USER@$SSH_IP:/usr/share/nginx/html/lab
 branches:
   only:
     - master
