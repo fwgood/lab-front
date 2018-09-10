@@ -7,13 +7,12 @@ node_js:
 cache: yarn
 before_install:
   - sudo apt-get install -y sshpass
-install:
-  - yarn install
-script:
-  - yarn build
+# install:
+#   - yarn install
+# script:
+#   - yarn build
 after_script:
-  - sudo apt-get install -y sshpass
-  - sshpass -p $SSH_PASS scp -r dist/*  $SSH_USER@$SSH_IP:/usr/share/nginx/html/lab
+  - sshpass -p $SSH_PASS scp package.json  $SSH_USER@$SSH_IP:/usr/share/nginx/html/lab
 branches:
   only:
     - master
