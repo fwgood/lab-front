@@ -3,7 +3,6 @@ node_js:
   - 'node'
 cache: yarn
 install:
-  - apt-get install sshpass
   - yarn install
 script:
   - yarn build
