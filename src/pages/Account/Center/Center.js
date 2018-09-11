@@ -48,6 +48,10 @@ class Center extends PureComponent {
       case 'projects':
         router.push(`${match.url}/projects`);
         break;
+      case 'network':
+        console.log("232")
+        router.push(`${match.url}/network`);
+        break;
       default:
         break;
     }
@@ -118,7 +122,7 @@ class Center extends PureComponent {
         ),
       },
       {
-        key: 'projects',
+        key: 'newwork',
         tab: (
           <span>
             网络工程 <span style={{ fontSize: 14 }}>(8)</span>
@@ -199,8 +203,8 @@ class Center extends PureComponent {
                   </div>
                 </div>
               ) : (
-                'loading...'
-              )}
+                  'loading...'
+                )}
             </Card>
           </Col>
           <Col lg={17} md={24}>

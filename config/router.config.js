@@ -15,28 +15,32 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // dashboard
-      { path: '/', redirect: '/dashboard/analysis' },
+      { path: '/', redirect: '/dashboard/articles' ,
+      
+    },
       {
         path: '/dashboard',
         name: 'dashboard',
         icon: 'dashboard',
+        component: './Account/Center/Center',
         routes: [
           {
-            path: '/dashboard/analysis',
-            name: 'analysis',
-            component: './Dashboard/Analysis',
+            path: '/dashboard/center',
+            redirect: '/dashboard/articles',
           },
           {
-            path: '/dashboard/monitor',
-            name: 'monitor',
-            component: './Dashboard/Monitor',
+            path: '/dashboard/articles',
+            component: './Account/Center/Articles',
           },
           {
-            path: '/dashboard/workplace',
-            name: 'workplace',
-            component: './Dashboard/Workplace',
+            path: '/dashboard/applications',
+            component: './Account/Center/Applications',
           },
-        ],
+          {
+            path: '/dashboard/projects',
+            component: './Account/Center/Projects',
+          }
+        ]
       },
       // forms
       {
@@ -53,29 +57,6 @@ export default [
             path: '/form/step-form',
             name: 'stepform',
             component: './Forms/StepForm',
-            hideChildrenInMenu: true,
-            routes: [
-              {
-                path: '/form/step-form',
-                name: 'stepform',
-                redirect: '/form/step-form/info',
-              },
-              {
-                path: '/form/step-form/info',
-                name: 'info',
-                component: './Forms/StepForm/Step1',
-              },
-              {
-                path: '/form/step-form/confirm',
-                name: 'confirm',
-                component: './Forms/StepForm/Step2',
-              },
-              {
-                path: '/form/step-form/result',
-                name: 'result',
-                component: './Forms/StepForm/Step3',
-              },
-            ],
           },
           {
             path: '/form/advanced-form',
@@ -129,6 +110,7 @@ export default [
                 name: 'applications',
                 component: './List/Applications',
               },
+
             ],
           },
         ],
