@@ -1,5 +1,6 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
+import { consoleTestResultHandler } from '_tslint@5.11.0@tslint/lib/test';
 
 export async function queryProjectNotice() {
   return request('/api/project/notice');

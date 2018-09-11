@@ -82,7 +82,17 @@ export default function request(
   const defaultOptions = {
     credentials: 'include',
   };
+  let token = localStorage.getItem('token');
+  if (!token && !window.location.href.match(/\/user\/login/)) {
+    router.push('/user/login');
+    return;
+  }
+
   const newOptions = { ...defaultOptions, ...options };
+  newOptions.headers = {
+    Authorization: 'Bearer ' + token,
+    ...newOptions.headers,
+  };
   if (
     newOptions.method === 'POST' ||
     newOptions.method === 'PUT' ||
@@ -92,6 +102,7 @@ export default function request(
       newOptions.headers = {
         Accept: 'application/json',
         'Content-Type': 'application/json; charset=utf-8',
+        Authorization: 'Bearer ' + token,
         ...newOptions.headers,
       };
       newOptions.body = JSON.stringify(newOptions.body);
@@ -99,6 +110,7 @@ export default function request(
       // newOptions.body is FormData
       newOptions.headers = {
         Accept: 'application/json',
+        Authorization: 'Bearer ' + token,
         ...newOptions.headers,
       };
     }
