@@ -102,7 +102,12 @@ export async function updateFakeList(params) {
     },
   });
 }
-
+export async function login(params) {
+  return request('http://lab.lli.fun/api/v1/user/login', {
+    method: 'POST',
+    body: params,
+  });
+}
 export async function fakeAccountLogin(params) {
   return request('/api/login/account', {
     method: 'POST',
