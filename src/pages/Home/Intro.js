@@ -4,7 +4,7 @@ import Link from 'umi/link';
 import router from 'umi/router';
 import { Card, Row, Col, Icon, Avatar, Tag, Divider, Spin, Input } from 'antd';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
-import styles from './Center.less';
+import styles from './Intro.less';
 
 @connect(({ loading, user, project }) => ({
   listLoading: loading.effects['list/fetch'],
@@ -35,27 +35,6 @@ class Center extends PureComponent {
       type: 'project/fetchNotice',
     });
   }
-
-  onTabChange = key => {
-    const { match } = this.props;
-    switch (key) {
-      case 'articles':
-        router.push(`${match.url}/articles`);
-        break;
-      case 'applications':
-        router.push(`${match.url}/applications`);
-        break;
-      case 'projects':
-        router.push(`${match.url}/projects`);
-        break;
-      case 'network':
-        console.log("232")
-        router.push(`${match.url}/network`);
-        break;
-      default:
-        break;
-    }
-  };
 
   showInput = () => {
     this.setState({ inputVisible: true }, () => this.input.focus());
@@ -95,41 +74,6 @@ class Center extends PureComponent {
       location,
       children,
     } = this.props;
-
-    const operationTabList = [
-      {
-        key: 'articles',
-        tab: (
-          <span>
-            软件工程 <span style={{ fontSize: 14 }}>(8)</span>
-          </span>
-        ),
-      },
-      {
-        key: 'applications',
-        tab: (
-          <span>
-            数字媒体技术 <span style={{ fontSize: 14 }}>(8)</span>
-          </span>
-        ),
-      },
-      {
-        key: 'projects',
-        tab: (
-          <span>
-            信息安全 <span style={{ fontSize: 14 }}>(8)</span>
-          </span>
-        ),
-      },
-      {
-        key: 'newwork',
-        tab: (
-          <span>
-            网络工程 <span style={{ fontSize: 14 }}>(8)</span>
-          </span>
-        ),
-      },
-    ];
 
     return (
       <GridContent className={styles.userCenter}>
@@ -196,12 +140,10 @@ class Center extends PureComponent {
             <Card
               className={styles.tabsCard}
               bordered={false}
-              tabList={operationTabList}
-              activeTabKey={location.pathname.replace(`${match.path}/`, '')}
-              onTabChange={this.onTabChange}
-              loading={listLoading}
             >
-              {children}
+              <span>国家示范性软件学院 <span style={{ fontSize: 16 }}></span>
+              
+          </span>
             </Card>
           </Col>
         </Row>

@@ -21,7 +21,7 @@ class Center extends PureComponent {
     );
     const ListContent = ({ data: { content, updatedAt, avatar, owner, href } }) => (
       <div className={stylesArticles.listContent}>
-        <div className={stylesArticles.description}>{content}</div>
+        <div className={stylesArticles.description}>kaishi</div>
         <div className={stylesArticles.extra}>
           <Avatar src={avatar} size="small" />
           <a href={href}>{owner}</a> 发布在
@@ -50,8 +50,8 @@ class Center extends PureComponent {
               title={
                 <a className={stylesArticles.listItemMetaTitle} href={item.href}>
                   {item.title}
-                </a>
-              }
+                  </a>
+                }
               description={
                 <span>
                   <Tag>Ant Design</Tag>

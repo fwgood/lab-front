@@ -15,32 +15,14 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // dashboard
-      { path: '/', redirect: '/dashboard/articles' ,
+      { path: '/', redirect: '/dashboard' ,
       
     },
       {
         path: '/dashboard',
         name: 'dashboard',
         icon: 'dashboard',
-        component: './Account/Center/Center',
-        routes: [
-          {
-            path: '/dashboard/center',
-            redirect: '/dashboard/articles',
-          },
-          {
-            path: '/dashboard/articles',
-            component: './Account/Center/Articles',
-          },
-          {
-            path: '/dashboard/applications',
-            component: './Account/Center/Applications',
-          },
-          {
-            path: '/dashboard/projects',
-            component: './Account/Center/Projects',
-          }
-        ]
+        component: './Home/Intro',
       },
       // forms
       {
@@ -51,7 +33,7 @@ export default [
           {
             path: '/form/basic-form',
             name: 'basicform',
-            component: './Forms/BasicForm',
+            component: './Term/CurrentTerm',
           },
           {
             path: '/form/step-form',

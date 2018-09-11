@@ -83,10 +83,10 @@ export default function request(
     credentials: 'include',
   };
   let token = localStorage.getItem('token');
-  if (!token && !window.location.href.match(/\/user\/login/)) {
-    router.push('/user/login');
-    return;
-  }
+  // if (!token && !window.location.href.match(/\/user\/login/)) {
+  //   router.push('/user/login');
+  //   return;
+  // }
 
   const newOptions = { ...defaultOptions, ...options };
   newOptions.headers = {
