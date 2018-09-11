@@ -66,7 +66,6 @@ class BasicForms extends PureComponent {
     return (
       <PageHeaderWrapper
         title="2018年秋季"
-        content="我的课程用于向用户收集或验证信息，2018年秋季常见于数据项较少的表单场景。"
       >
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>

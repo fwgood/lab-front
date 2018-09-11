@@ -63,34 +63,6 @@ const data = [{
   description: '这种模板用于提醒谁与你发生了互动，左侧放『谁』的头像',
   datetime: '2017-08-07',
   type: '消息',
-}, {
-  id: '000000009',
-  title: '任务名称',
-  description: '任务需要在 2017-01-12 20:00 前启动',
-  extra: '未开始',
-  status: 'todo',
-  type: '待办',
-}, {
-  id: '000000010',
-  title: '第三方紧急代码变更',
-  description: '冠霖提交于 2017-01-06，需在 2017-01-07 前完成代码变更任务',
-  extra: '马上到期',
-  status: 'urgent',
-  type: '待办',
-}, {
-  id: '000000011',
-  title: '信息安全考试',
-  description: '指派竹尔于 2017-01-09 前完成更新并发布',
-  extra: '已耗时 8 天',
-  status: 'doing',
-  type: '待办',
-}, {
-  id: '000000012',
-  title: 'ABCD 版本发布',
-  description: '冠霖提交于 2017-01-06，需在 2017-01-07 前完成代码变更任务',
-  extra: '进行中',
-  status: 'processing',
-  type: '待办',
 }];
 
 function onItemClick(item, tabProps) {
@@ -159,12 +131,6 @@ ReactDOM.render(
         title="消息"
         emptyText="您已读完所有消息"
         emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
-      />
-      <NoticeIcon.Tab
-        list={noticeData['待办']}
-        title="待办"
-        emptyText="你已完成所有待办"
-        emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
       />
     </NoticeIcon>
   </div>

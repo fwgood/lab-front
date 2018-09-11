@@ -24,6 +24,7 @@ export interface INoticeIconProps {
   locale?: { emptyText: string; clear: string };
 }
 
+
 export default class NoticeIcon extends React.Component<INoticeIconProps, any> {
   public static Tab: typeof NoticeIconTab;
 }

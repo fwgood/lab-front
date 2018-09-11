@@ -144,7 +144,6 @@ class AdvancedForm extends PureComponent {
     return (
       <PageHeaderWrapper
         title="2017年秋季"
-        content="2017年秋季常见于一次性输入和提交大批量数据的场景。"
         wrapperClassName={styles.advancedForm}
       >
         <Card title="仓库管理" className={styles.card} bordered={false}>

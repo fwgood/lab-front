@@ -97,7 +97,7 @@ class Center extends PureComponent {
         key: 'articles',
         tab: (
           <span>
-            文章 <span style={{ fontSize: 14 }}>(8)</span>
+            软件工程 <span style={{ fontSize: 14 }}>(8)</span>
           </span>
         ),
       },
@@ -105,7 +105,7 @@ class Center extends PureComponent {
         key: 'applications',
         tab: (
           <span>
-            应用 <span style={{ fontSize: 14 }}>(8)</span>
+            数字媒体技术 <span style={{ fontSize: 14 }}>(8)</span>
           </span>
         ),
       },
@@ -113,7 +113,15 @@ class Center extends PureComponent {
         key: 'projects',
         tab: (
           <span>
-            项目 <span style={{ fontSize: 14 }}>(8)</span>
+            信息安全 <span style={{ fontSize: 14 }}>(8)</span>
+          </span>
+        ),
+      },
+      {
+        key: 'projects',
+        tab: (
+          <span>
+            网络工程 <span style={{ fontSize: 14 }}>(8)</span>
           </span>
         ),
       },

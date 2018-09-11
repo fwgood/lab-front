@@ -56,6 +56,7 @@ export default class SiderMenu extends PureComponent {
     this.state = {
       openKeys: getDefaultCollapsedSubMenus(props),
     };
+
   }
 
   static getDerivedStateFromProps(props, state) {
