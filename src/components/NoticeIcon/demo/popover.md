@@ -149,7 +149,7 @@ ReactDOM.render(
       popupAlign={{ offset: [20, -16] }}
     >
       <NoticeIcon.Tab
-        list={noticeData['通知']}
+        list={noticeData['公告']}
         title="通知"
         emptyText="你已查看所有通知"
         emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
