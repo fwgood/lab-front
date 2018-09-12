@@ -1,151 +1,124 @@
 import React, { PureComponent } from 'react';
-import { connect } from 'dva';
-import Link from 'umi/link';
-import router from 'umi/router';
-import { Card, Row, Col, Icon, Avatar, Tag, Divider, Spin, Input } from 'antd';
+import { Card, Row, Col, Tag, Divider, Button, Modal } from 'antd';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import styles from './Intro.less';
+import logo from '@/assets/logo.png';
 
-@connect(({ loading, user, project }) => ({
-  listLoading: loading.effects['list/fetch'],
-  currentUser: user.currentUser,
-  currentUserLoading: loading.effects['user/fetchCurrent'],
-  project,
-  projectLoading: loading.effects['project/fetchNotice'],
-}))
 class Center extends PureComponent {
   state = {
-    newTags: [],
-    inputVisible: false,
-    inputValue: '',
-  };
-
-  componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'user/fetchCurrent',
-    });
-    dispatch({
-      type: 'list/fetch',
-      payload: {
-        count: 8,
+    visible: false,
+    currentNews: '',
+    newsList: [
+      {
+        title: '先富带后富，脱贫致富路-软件学院三下乡团队汇报',
+        content: `2018年8月20日，云南大学的三下乡团队就澄江县"改革开放四十周年"主题调研继续进行，所有成员要了解澄江的本土企业发展状况，体味改革开放对于一个整体区域经济发展的作用，感受新时代的发展风貌。因此我们联系到云南大型综合型企业云南再峰集团，以再峰集团在澄江的发展为例映射澄江县经济的发展。`,
+        key: 1,
       },
-    });
-    dispatch({
-      type: 'project/fetchNotice',
-    });
-  }
-
-  showInput = () => {
-    this.setState({ inputVisible: true }, () => this.input.focus());
+      {
+        title: '先富带后富，脱贫致富路-软件学院三下乡团队汇报',
+        content: `2018年8月20日，云南大学的三下乡团队就澄江县"改革开放四十周年"主题调研继续进行，所有成员要了解澄江的本土企业发展状况，体味改革开放对于一个整体区域经济发展的作用，感受新时代的发展风貌。因此我们联系到云南大型综合型企业云南再峰集团，以再峰集团在澄江的发展为例映射澄江县经济的发展。`,
+        key: 2,
+      },
+      {
+        title: '先富带后富，脱贫致富路-软件学院三下乡团队汇报',
+        content: `2018年8月20日，云南大学的三下乡团队就澄江县"改革开放四十周年"主题调研继续进行，所有成员要了解澄江的本土企业发展状况，体味改革开放对于一个整体区域经济发展的作用，感受新时代的发展风貌。因此我们联系到云南大型综合型企业云南再峰集团，以再峰集团在澄江的发展为例映射澄江县经济的发展。`,
+        key: 3,
+      },
+      {
+        title: '先富带后富，脱贫致富路-软件学院三下乡团队汇报',
+        content: `2018年8月20日，云南大学的三下乡团队就澄江县"改革开放四十周年"主题调研继续进行，所有成员要了解澄江的本土企业发展状况，体味改革开放对于一个整体区域经济发展的作用，感受新时代的发展风貌。因此我们联系到云南大型综合型企业云南再峰集团，以再峰集团在澄江的发展为例映射澄江县经济的发展。`,
+        key: 4,
+      },
+    ],
   };
 
-  saveInputRef = input => {
-    this.input = input;
-  };
-
-  handleInputChange = e => {
-    this.setState({ inputValue: e.target.value });
-  };
-
-  handleInputConfirm = () => {
-    const { state } = this;
-    const { inputValue } = state;
-    let { newTags } = state;
-    if (inputValue && newTags.filter(tag => tag.label === inputValue).length === 0) {
-      newTags = [...newTags, { key: `new-${newTags.length}`, label: inputValue }];
-    }
+  handleOk = () => {
     this.setState({
-      newTags,
-      inputVisible: false,
-      inputValue: '',
+      visible: false,
+    });
+  };
+
+  handleCancle = () => {
+    this.handleOk();
+  };
+
+  handleMore = news => () => {
+    this.setState({
+      visible: true,
+      currentNews: news,
     });
   };
 
   render() {
-    const { newTags, inputVisible, inputValue } = this.state;
-    const {
-      listLoading,
-      currentUser,
-      currentUserLoading,
-      project: { notice },
-      projectLoading,
-      match,
-      location,
-      children,
-    } = this.props;
-
     return (
       <GridContent className={styles.userCenter}>
         <Row gutter={24}>
           <Col lg={7} md={24}>
-            <Card bordered={false} style={{ marginBottom: 24 }} loading={currentUserLoading}>
-              {currentUser && Object.keys(currentUser).length ? (
-                <div>
-                  <div className={styles.avatarHolder}>
-                    <img alt="" src={currentUser.avatar} />
-                    <div className={styles.name}>{currentUser.name}</div>
-                    <div>{currentUser.signature}</div>
-                  </div>
-                  <div className={styles.detail}>
-                    <p>
-                      <i className={styles.title} />
-                      {currentUser.title}
-                    </p>
-                    <p>
-                      <i className={styles.group} />
-                      {currentUser.group}
-                    </p>
-                    <p>
-                      <i className={styles.address} />
-                      {currentUser.geographic.province.label}
-                      {currentUser.geographic.city.label}
-                    </p>
-                  </div>
-                  <Divider dashed />
-                  <div className={styles.tags}>
-                    <div className={styles.tagsTitle}>标签</div>
-                    {currentUser.tags.concat(newTags).map(item => (
-                      <Tag key={item.key}>{item.label}</Tag>
-                    ))}
-                    {inputVisible && (
-                      <Input
-                        ref={this.saveInputRef}
-                        type="text"
-                        size="small"
-                        style={{ width: 78 }}
-                        value={inputValue}
-                        onChange={this.handleInputChange}
-                        onBlur={this.handleInputConfirm}
-                        onPressEnter={this.handleInputConfirm}
-                      />
-                    )}
-                    {!inputVisible && (
-                      <Tag
-                        onClick={this.showInput}
-                        style={{ background: '#fff', borderStyle: 'dashed' }}
-                      >
-                        <Icon type="plus" />
-                      </Tag>
-                    )}
-                  </div>
-                  <Divider style={{ marginTop: 16 }} dashed />
+            <Card bordered={false} style={{ marginBottom: 24 }}>
+              <div>
+                <div className={styles.avatarHolder}>
+                  <img alt="" src={logo} />
+                  <div className={styles.name}>云南大学软件学院</div>
+                  <div>会泽百家，至公天下</div>
                 </div>
-              ) : (
-                  'loading...'
-                )}
+                <div className={styles.detail}>
+                  <p>
+                    <i className={styles.title} />
+                    国家示范性软件学院
+                  </p>
+                  <p>
+                    <i className={styles.group} />
+                    云南大学-软件学院
+                  </p>
+                  <p>
+                    <i className={styles.address} />
+                    云南省昆明市
+                  </p>
+                </div>
+                <Divider dashed />
+                <div className={styles.tags}>
+                  <div className={styles.tagsTitle}>标签</div>
+                  <Tag>211</Tag>
+                  <Tag>双一流</Tag>
+                  <Tag>国家示范性软件学院</Tag>
+                </div>
+                <Divider style={{ marginTop: 16 }} dashed />
+              </div>
             </Card>
           </Col>
           <Col lg={17} md={24}>
-            <Card
-              className={styles.tabsCard}
-              bordered={false}
-            >
-              <span>国家示范性软件学院 <span style={{ fontSize: 16 }}></span>
-              
-          </span>
+            <Card className={styles.tabsCard} bordered={false}>
+              <span>
+                <h2>最近新闻</h2>
+                <Row>
+                  {this.state.newsList.map(n => (
+                    <Col lg={24} md={24} key={n.key}>
+                      <Card
+                        title={n.title}
+                        extra={
+                          <Button onClick={this.handleMore(n)} type="dashed">
+                            More
+                          </Button>
+                        }
+                        style={{ width: '100%', marginTop: 20 }}
+                        hoverable
+                      >
+                        <p>{n.content}</p>
+                      </Card>
+                    </Col>
+                  ))}
+                </Row>
+              </span>
             </Card>
           </Col>
+          <Modal
+            title={this.state.currentNews.title}
+            visible={this.state.visible}
+            onOk={this.handleOk}
+            onCancel={this.handleCancle}
+          >
+            <p>{this.state.currentNews.content}</p>
+          </Modal>
         </Row>
       </GridContent>
     );
