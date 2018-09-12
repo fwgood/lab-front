@@ -137,3 +137,8 @@ export async function addCourse(params) {
     body: params,
   });
 }
+export async function queryAllCourse() {
+  return request('http://lab.lli.fun/lab/api/v1/course/allCourseList', {
+    method: 'POST',
+  });
+}
