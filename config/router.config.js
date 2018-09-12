@@ -47,6 +47,13 @@ export default [
           },
         ],
       },
+      {
+        path: '/course',
+        icon: 'form',
+        name: 'course',
+        hideInMenu:true,
+        component:'./Term/CourseInfo'
+      },
       // list
       {
         path: '/list',

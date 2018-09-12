@@ -8,6 +8,7 @@ export default {
   'menu.dashboard.monitor': '消息',
   'menu.dashboard.workplace': '个人资料',
   'menu.form': '我的课程',
+  'menu.course':'课程详情',
   'menu.form.basicform': '2018年秋季',
   'menu.form.stepform': '2018年春季',
   'menu.form.stepform.info': '分步表单（填写转账信息）',
