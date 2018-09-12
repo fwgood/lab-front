@@ -15,9 +15,10 @@ export default [
     Routes: ['src/pages/Authorized'],
     routes: [
       // dashboard
-      { path: '/', redirect: '/dashboard' ,
-      
-    },
+      {
+        path: '/',
+        redirect: '/dashboard',
+      },
       {
         path: '/dashboard',
         name: 'dashboard',
@@ -30,6 +31,11 @@ export default [
         icon: 'form',
         name: 'form',
         routes: [
+          {
+            path: '/form/test-form',
+            name: 'testform',
+            component: './Forms/BasicForm',
+          },
           {
             path: '/form/basic-form',
             name: 'basicform',
@@ -44,6 +50,23 @@ export default [
             path: '/form/advanced-form',
             name: 'advancedform',
             component: './Forms/AdvancedForm',
+          },
+          {
+            path: '/form/add-course',
+            name: 'addCourse',
+            component: './Forms/AddCourse',
+          },
+        ],
+      },
+      {
+        path: '/manage-course',
+        name: 'manage-course',
+        icon: 'form',
+        routes: [
+          {
+            path: '/manage-course/add-course',
+            name: 'addCourse',
+            component: './Course/AddCourse',
           },
         ],
       },
@@ -99,7 +122,6 @@ export default [
                 name: 'applications',
                 component: './List/Applications',
               },
-
             ],
           },
         ],

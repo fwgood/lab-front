@@ -6,7 +6,8 @@ import { Card, Row, Col, Icon, Avatar, Tag, Divider, Spin, Input } from 'antd';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import styles from './Center.less';
 
-@connect(({ loading, user, project }) => ({
+@connect(({ loading, user, project, login }) => ({
+  login,
   listLoading: loading.effects['list/fetch'],
   currentUser: user.currentUser,
   currentUserLoading: loading.effects['user/fetchCurrent'],
@@ -21,6 +22,7 @@ class Center extends PureComponent {
   };
 
   componentDidMount() {
+    console.log(this.props.login);
     const { dispatch } = this.props;
     dispatch({
       type: 'user/fetchCurrent',
@@ -49,7 +51,6 @@ class Center extends PureComponent {
         router.push(`${match.url}/projects`);
         break;
       case 'network':
-        console.log("232")
         router.push(`${match.url}/network`);
         break;
       default:
@@ -130,35 +131,38 @@ class Center extends PureComponent {
         ),
       },
     ];
-
     return (
       <GridContent className={styles.userCenter}>
         <Row gutter={24}>
           <Col lg={7} md={24}>
             <Card bordered={false} style={{ marginBottom: 24 }} loading={currentUserLoading}>
-              {currentUser && Object.keys(currentUser).length ? (
-                <div>
-                  <div className={styles.avatarHolder}>
-                    <img alt="" src={currentUser.avatar} />
-                    <div className={styles.name}>{currentUser.name}</div>
-                    <div>{currentUser.signature}</div>
-                  </div>
-                  <div className={styles.detail}>
-                    <p>
-                      <i className={styles.title} />
-                      {currentUser.title}
-                    </p>
-                    <p>
-                      <i className={styles.group} />
-                      {currentUser.group}
-                    </p>
-                    <p>
-                      <i className={styles.address} />
-                      {currentUser.geographic.province.label}
-                      {currentUser.geographic.city.label}
-                    </p>
-                  </div>
-                  <Divider dashed />
+              <div>
+                <div className={styles.avatarHolder}>
+                  <img
+                    alt=""
+                    src={
+                      currentUser.userAvatar ||
+                      'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png'
+                    }
+                  />
+                  <div className={styles.name}>{currentUser.userNickname}</div>
+                  <div>该用户很懒，暂时没有签名</div>
+                </div>
+                <div className={styles.detail}>
+                  <p>
+                    <i className={styles.title} />
+                    {currentUser.userGrade}
+                  </p>
+                  <p>
+                    <i className={styles.group} />
+                    {`${currentUser.userCollege} - ${currentUser.userMajor}`}
+                  </p>
+                  <p>
+                    <i className={styles.address} />
+                    云南省昆明市
+                  </p>
+                </div>
+                {/* <Divider dashed />
                   <div className={styles.tags}>
                     <div className={styles.tagsTitle}>标签</div>
                     {currentUser.tags.concat(newTags).map(item => (
@@ -184,12 +188,9 @@ class Center extends PureComponent {
                         <Icon type="plus" />
                       </Tag>
                     )}
-                  </div>
-                  <Divider style={{ marginTop: 16 }} dashed />
-                </div>
-              ) : (
-                  'loading...'
-                )}
+                  </div> */}
+                <Divider style={{ marginTop: 16 }} dashed />
+              </div>
             </Card>
           </Col>
           <Col lg={17} md={24}>

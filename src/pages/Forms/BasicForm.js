@@ -64,9 +64,7 @@ class BasicForms extends PureComponent {
     };
 
     return (
-      <PageHeaderWrapper
-        title="2018年秋季"
-      >
+      <PageHeaderWrapper title="2018年秋季">
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
             <FormItem {...formItemLayout} label="标题">

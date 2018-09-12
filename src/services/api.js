@@ -129,3 +129,11 @@ export async function queryNotices() {
 export async function getFakeCaptcha(mobile) {
   return request(`/api/captcha?mobile=${mobile}`);
 }
+// Course api
+
+export async function addCourse(params) {
+  return request('/api/addCourse', {
+    method: 'POST',
+    body: params,
+  });
+}
