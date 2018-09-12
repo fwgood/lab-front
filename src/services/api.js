@@ -132,7 +132,7 @@ export async function getFakeCaptcha(mobile) {
 // Course api
 
 export async function addCourse(params) {
-  return request('/api/addCourse', {
+  return request('http://lab.lli.fun/api/v1/course/addCourse', {
     method: 'POST',
     body: params,
   });
