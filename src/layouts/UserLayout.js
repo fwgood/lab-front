@@ -3,7 +3,7 @@ import Link from 'umi/link';
 import { Icon } from 'antd';
 import GlobalFooter from '@/components/GlobalFooter';
 import styles from './UserLayout.less';
-import logo from '../assets/icon_index.png';
+import logo from '../assets/logo.png';
 
 const links = [
   {

@@ -73,6 +73,7 @@ export default function request(
    * Produce fingerprints based on url and parameters
    * Maybe url has the same parameters
    */
+  console.log(url);
   const fingerprint = url + (options.body ? JSON.stringify(options.body) : '');
   const hashcode = hash
     .sha256()
@@ -82,7 +83,19 @@ export default function request(
   const defaultOptions = {
     credentials: 'include',
   };
+  const token = localStorage.getItem('token');
+  if (!token && !window.location.href.match(/\/user\/login/)) {
+    router.push('/user/login');
+    return;
+  }
+
   const newOptions = { ...defaultOptions, ...options };
+  if (!window.location.href.match(/\/user\/login/)) {
+    newOptions.headers = {
+      Authorization: `Bearer ${token}`,
+      ...newOptions.headers,
+    };
+  }
   if (
     newOptions.method === 'POST' ||
     newOptions.method === 'PUT' ||
@@ -104,21 +117,26 @@ export default function request(
     }
   }
 
-  const expirys = options.expirys || 60;
+  // const expirys = options.expirys || 60;
   // options.expirys !== false, return the cache,
-  if (options.expirys !== false) {
-    const cached = sessionStorage.getItem(hashcode);
-    const whenCached = sessionStorage.getItem(`${hashcode}:timestamp`);
-    if (cached !== null && whenCached !== null) {
-      const age = (Date.now() - whenCached) / 1000;
-      if (age < expirys) {
-        const response = new Response(new Blob([cached]));
-        return response.json();
-      }
-      sessionStorage.removeItem(hashcode);
-      sessionStorage.removeItem(`${hashcode}:timestamp`);
-    }
+  // if (options.expirys !== false) {
+  //   const cached = sessionStorage.getItem(hashcode);
+  //   const whenCached = sessionStorage.getItem(`${hashcode}:timestamp`);
+  //   if (cached !== null && whenCached !== null) {
+  //     const age = (Date.now() - whenCached) / 1000;
+  //     if (age < expirys) {
+  //       const response = new Response(new Blob([cached]));
+  //       return response.json();
+  //     }
+  //     sessionStorage.removeItem(hashcode);
+  //     sessionStorage.removeItem(`${hashcode}:timestamp`);
+  //   }
+  // }
+  const baseUrl = 'http://lab.lli.fun';
+  if (process.env.NODE_ENV == 'production') {
+    url = baseUrl + url;
   }
+  console.log(url);
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response => cachedSave(response, hashcode))

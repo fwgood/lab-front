@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import Link from 'umi/link';
 import { Checkbox, Alert, Icon } from 'antd';
 import Login from '@/components/Login';
 import styles from './Login.less';
@@ -12,9 +11,14 @@ const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
   submitting: loading.effects['login/login'],
 }))
 class LoginPage extends Component {
+  componentWillMount() {
+    console.log(process.env.NODE_ENV);
+  }
+
   state = {
     type: 'account',
     autoLogin: true,
+    isFailed: false,
   };
 
   onTabChange = type => {
@@ -38,7 +42,16 @@ class LoginPage extends Component {
       });
     });
 
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
+
   handleSubmit = (err, values) => {
+    this.timer = setTimeout(() => {
+      this.setState({
+        isFailed: true,
+      });
+    }, 2000);
     const { type } = this.state;
     if (!err) {
       const { dispatch } = this.props;
@@ -80,14 +93,14 @@ class LoginPage extends Component {
               login.type === 'account' &&
               !submitting &&
               this.renderMessage('账户或密码错误（admin/888888）')}
-            <UserName name="userName" placeholder="admin/user" />
+            <UserName name="username" placeholder="admin/user" />
             <Password
               name="password"
               placeholder="888888/123456"
               onPressEnter={() => this.loginForm.validateFields(this.handleSubmit)}
             />
           </Tab>
-      
+
           <div>
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
               自动登录
@@ -96,7 +109,7 @@ class LoginPage extends Component {
               忘记密码
             </a>
           </div>
-          <Submit loading={submitting}>登录</Submit>
+          <Submit loading={!this.state.isFailed && submitting}>登录</Submit>
         </Login>
       </div>
     );

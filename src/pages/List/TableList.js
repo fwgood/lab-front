@@ -283,7 +283,7 @@ class TableList extends PureComponent {
 
   columns = [
     {
-      title: '规则名称',
+      title: '实验名称',
       dataIndex: 'name',
     },
     {

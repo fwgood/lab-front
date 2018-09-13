@@ -128,17 +128,25 @@ const actions = (
   </Fragment>
 );
 
-export default () => (
-  <PageHeaderWrapper>
-    <Card bordered={false}>
-      <Result
-        type="success"
-        title={formatMessage({ id: 'app.result.success.title' })}
-        description={formatMessage({ id: 'app.result.success.description' })}
-        extra={extra}
-        actions={actions}
-        style={{ marginTop: 48, marginBottom: 16 }}
-      />
-    </Card>
-  </PageHeaderWrapper>
-);
+export default class Success extends React.PureComponent {
+  componentDidMount() {
+    console.log(this.props);
+  }
+
+  render() {
+    return (
+      <PageHeaderWrapper>
+        <Card bordered={false}>
+          <Result
+            type="success"
+            title={this.props.location.state.title}
+            description={this.props.location.state.description}
+            extra={extra}
+            actions={actions}
+            style={{ marginTop: 48, marginBottom: 16 }}
+          />
+        </Card>
+      </PageHeaderWrapper>
+    );
+  }
+}

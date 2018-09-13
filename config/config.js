@@ -6,7 +6,6 @@ import defaultSettings from '../src/defaultSettings';
 
 export default {
   // add for transfer to umi
-  history: 'hash',
   plugins: [
     [
       'umi-plugin-react',

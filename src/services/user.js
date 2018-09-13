@@ -5,5 +5,5 @@ export async function query() {
 }
 
 export async function queryCurrent() {
-  return request('/api/currentUser');
+  return request('http://lab.lli.fun/api/v1/user/currentUser');
 }
