@@ -55,7 +55,7 @@ export default class AddCourse extends Component {
         <Card>
           <Form onSubmit={this.handleSubmit}>
             <FormItem {...formItemLayout} label="课程标题">
-              {getFieldDecorator('course_name', {
+              {getFieldDecorator('courseName', {
                 rules: [
                   {
                     required: true,
@@ -65,7 +65,7 @@ export default class AddCourse extends Component {
               })(<Input placeholder="给课程起个名字" />)}
             </FormItem>
             <FormItem {...formItemLayout} label="课程内容">
-              {getFieldDecorator('course_content', {
+              {getFieldDecorator('courseContent', {
                 rules: [
                   {
                     required: true,
@@ -75,7 +75,7 @@ export default class AddCourse extends Component {
               })(<Input.TextArea placeholder="请输入课程内容描述" autosize />)}
             </FormItem>
             <FormItem {...formItemLayout} label="选课密码">
-              {getFieldDecorator('course_password', {
+              {getFieldDecorator('coursePassword', {
                 rules: [
                   {
                     required: true,

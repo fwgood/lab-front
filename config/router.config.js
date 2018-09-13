@@ -72,15 +72,20 @@ export default [
             path:'/manage-course/my-class',
             name:'myClass',
             component:'./Term/CurrentTerm',
-          }
+          },
+          {
+            path: '/manage-course/manage-course',
+            name: 'manageCourse',
+            component: './Course/ManageCourse',
+          },
         ],
       },
       {
         path: '/course',
         icon: 'form',
         name: 'course',
-        hideInMenu:true,
-        component:'./Term/CourseInfo'
+        hideInMenu: true,
+        component: './Term/CourseInfo',
       },
       // list
       {

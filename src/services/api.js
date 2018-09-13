@@ -132,8 +132,30 @@ export async function getFakeCaptcha(mobile) {
 // Course api
 
 export async function addCourse(params) {
-  return request('/api/addCourse', {
+  return request('http://lab.lli.fun/api/v1/course/addCourse', {
     method: 'POST',
     body: params,
   });
+}
+export async function queryAllCourse() {
+  console.log(123);
+  return request('http://lab.lli.fun/api/v1/course/allCourseList', {
+    method: 'POST',
+  });
+}
+export async function changeCourseState({ courseId, courseState }) {
+  return request(
+    `http://lab.lli.fun/lab/api/v1/course/checkCourse?courseId=${courseId}&courseState=${courseState}`,
+    {
+      method: 'POST',
+    }
+  );
+}
+export async function delCourse({ courseId, courseState }) {
+  return request(
+    `http://lab.lli.fun/lab/api/v1/course/deleteCourse?courseId=${courseId}&courseState=${courseState}`,
+    {
+      method: 'POST',
+    }
+  );
 }

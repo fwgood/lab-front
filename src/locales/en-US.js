@@ -16,6 +16,7 @@ export default {
   'menu.form.testform': '测试',
   'menu.manage-course': 'Manage Course',
   'menu.manage-course.addCourse': 'Add Course',
+  'menu.manage-course.manageCourse': 'Manage Course',
   'menu.list': 'List',
   'menu.list.searchtable': 'Search Table',
   'menu.list.basiclist': 'Basic List',
