@@ -68,6 +68,11 @@ export default [
             name: 'addCourse',
             component: './Course/AddCourse',
           },
+          {
+            path:'/manage-course/my-class',
+            name:'myClass',
+            component:'./Term/CurrentTerm',
+          }
         ],
       },
       {

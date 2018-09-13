@@ -66,6 +66,7 @@ const CreateForm = Form.create()(props => {
       onOk={okHandle}
       onCancel={() => handleModalVisible()}
     >
+    <Form>
       <FormItem {...formItemLayout} label="实验名称">
         {form.getFieldDecorator('labName', {
           rules: [{ required: true, message: '请输入至少五个字符的规则描述！', min: 5 }],
@@ -97,7 +98,7 @@ const CreateForm = Form.create()(props => {
           </Upload>
         )}
       </FormItem>
-
+      </Form>
     </Modal>
   );
 });
@@ -270,7 +271,7 @@ class TableList extends PureComponent {
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
-    state = { visible: false };
+
     const filters = Object.keys(filtersArg).reduce((obj, key) => {
       const newObj = { ...obj };
       newObj[key] = getValue(filtersArg[key]);

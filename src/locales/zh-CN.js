@@ -19,6 +19,7 @@ export default {
   'menu.form.testform': '测试',
   'menu.manage-course': '课程管理',
   'menu.manage-course.addCourse': '添加课程',
+  'menu.manage-course.myClass':'我的班级',
   'menu.list': '列表页',
   'menu.list.searchtable': '查询表格',
   'menu.list.basiclist': '标准列表',

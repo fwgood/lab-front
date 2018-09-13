@@ -1,13 +1,30 @@
 import React, { PureComponent } from 'react';
-import { Card, Row, Col, Tag, Divider, Button, Modal } from 'antd';
+import { Card, Row, Col, Tag, Divider, Button, Modal, Input, Form } from 'antd';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import styles from './Intro.less';
 import logo from '@/assets/logo.png';
-
+import {connect } from 'dva';
+const FormItem = Form.Item;
+const { TextArea } = Input
+const formItemLayout = {
+  labelCol: { span: 6 },
+  wrapperCol: { span: 15 },
+};
+@connect(({ login, loading }) => ({
+  login,
+}))
+@Form.create()
 class Center extends PureComponent {
+
   state = {
     visible: false,
     currentNews: '',
+    infoVisible: false,
+    confirmLoading: false,
+    infoObj: {
+      title: '',
+      content: '',
+    },
     newsList: [
       {
         title: '先富带后富，脱贫致富路-软件学院三下乡团队汇报',
@@ -31,6 +48,32 @@ class Center extends PureComponent {
       },
     ],
   };
+  showModal = () => {
+    this.setState({
+      infoVisible: true,
+    });
+  }
+
+  handleInfoOk = () => {
+    console.log(this.state.infoObj)
+    this.setState({
+      confirmLoading: true,
+    });
+
+    setTimeout(() => {
+      this.setState({
+        infoVisible: false,
+        confirmLoading: false,
+      });
+    }, 2000);
+  }
+
+  handleInfoCancel = () => {
+    console.log('Clicked cancel button');
+    this.setState({
+      infoVisible: false,
+    });
+  }
 
   handleOk = () => {
     this.setState({
@@ -49,7 +92,49 @@ class Center extends PureComponent {
     });
   };
 
+  renderInfo() {
+    const { getFieldDecorator } = this.props.form;
+
+    return (
+      <div>
+        <Modal title="公告"
+          visible={this.state.infoVisible}
+          onOk={this.handleInfoOk}
+          confirmLoading={this.state.confirmLoading}
+          onCancel={this.handleInfoCancel}
+        >
+          <Form  onSubmit={this.handleSubmit}>
+            <FormItem
+              {...formItemLayout}
+              label="标题"
+            >
+              {getFieldDecorator('title', {
+                rules: [{
+                  type: 'email', message: '请输入标题',
+                }],
+              })(
+                <Input />
+              )}
+            </FormItem>
+            <FormItem
+              {...formItemLayout}
+              label="公告内容"
+            >
+              {getFieldDecorator('content', {
+                rules: [{
+                  type: 'email', message: '请输入内容',
+                }],
+              })(
+                <TextArea />
+              )}
+            </FormItem>
+          </Form>
+        </Modal>
+      </div>
+    );
+  }
   render() {
+
     return (
       <GridContent className={styles.userCenter}>
         <Row gutter={24}>
@@ -87,9 +172,10 @@ class Center extends PureComponent {
             </Card>
           </Col>
           <Col lg={17} md={24}>
-            <Card className={styles.tabsCard} bordered={false}>
+            <Card title="最近新闻" className={styles.tabsCard} bordered={false} extra={<a style={getAuth().role=='2'?{visibility:"hidden"}:{}} onClick={() => this.showModal()}>发布公告</a>}>
+              {this.renderInfo()}
               <span>
-                <h2>最近新闻</h2>
+
                 <Row>
                   {this.state.newsList.map(n => (
                     <Col lg={24} md={24} key={n.key}>
