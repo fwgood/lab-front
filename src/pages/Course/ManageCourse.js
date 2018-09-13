@@ -19,6 +19,7 @@ import {
   Form,
   DatePicker,
   Select,
+  Tag,
 } from 'antd';
 
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -38,15 +39,16 @@ const { Search, TextArea } = Input;
 }))
 @Form.create()
 class BasicList extends PureComponent {
-  state = { visible: false, done: false };
+  state = { visible: false, done: false, type: 'all' };
 
   formLayout = {
     labelCol: { span: 7 },
     wrapperCol: { span: 13 },
   };
 
-  componentDidMount() {
+  componentWillMount() {
     const { dispatch } = this.props;
+    console.log(23);
     dispatch({
       type: 'course/fetchAllCourse',
     });
@@ -81,6 +83,22 @@ class BasicList extends PureComponent {
     });
   };
 
+  getList = () => {
+    const type = this.state.type;
+    if (type == 'all') {
+      return this.props.course.list;
+    }
+    if (type == 'waiting') {
+      return this.props.course.list.filter(e => e.courseState == 0 || e.courseState == null);
+    }
+    if (type == 'success') {
+      return this.props.course.list.filter(e => e.courseState == 1);
+    }
+    if (type == 'fail') {
+      return this.props.course.list.filter(e => e.courseState == 2);
+    }
+  };
+
   handleSubmit = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
@@ -97,6 +115,12 @@ class BasicList extends PureComponent {
         type: 'list/submit',
         payload: { id, ...fieldsValue },
       });
+    });
+  };
+
+  handleTypeChange = e => {
+    this.setState({
+      type: e.target.value,
     });
   };
 
@@ -120,6 +144,7 @@ class BasicList extends PureComponent {
     const { visible, done, current = {} } = this.state;
 
     const editAndDelete = (key, currentItem) => {
+      console.log(currentItem);
       if (key === 'edit') this.showEditModal(currentItem);
       else if (key === 'delete') {
         Modal.confirm({
@@ -129,12 +154,34 @@ class BasicList extends PureComponent {
           cancelText: '取消',
           onOk: () => this.deleteItem(currentItem.id),
         });
+      } else if (key === 'pass') {
+        this.props.dispatch({
+          type: 'course/changeCourseState',
+          payload: {
+            courseId: currentItem.courseId,
+            courseState: 1,
+          },
+        })
+      } else if (key === 'reject') {
+        this.props.dispatch({
+          type: 'course/changeCourseState',
+          payload: {
+            courseId: currentItem.courseId,
+            courseState: 2,
+          },
+        })
+      }else if(key === 'del'){
+        this.props.dispatch({
+          type: 'course/deleteCourse',
+          payload: {
+            courseId: currentItem.courseId,
+            courseState: currentItem.courseState
+          },
+        })
       }
     };
 
-    const modalFooter = done
-      ? { footer: null, onCancel: this.handleDone }
-      : { okText: '保存', onOk: this.handleSubmit, onCancel: this.handleCancel };
+    const modalFooter = { footer: null, onCancel: this.handleDone };
 
     const Info = ({ title, value, bordered }) => (
       <div className={styles.headerInfo}>
@@ -146,10 +193,11 @@ class BasicList extends PureComponent {
 
     const extraContent = (
       <div className={styles.extraContent}>
-        <RadioGroup defaultValue="all">
+        <RadioGroup defaultValue="all" onChange={this.handleTypeChange}>
           <RadioButton value="all">全部</RadioButton>
-          <RadioButton value="progress">进行中</RadioButton>
-          <RadioButton value="waiting">等待中</RadioButton>
+          <RadioButton value="waiting">待审核</RadioButton>
+          <RadioButton value="success">审核通过</RadioButton>
+          <RadioButton value="fail">审核失败</RadioButton>
         </RadioGroup>
         <Search className={styles.extraContentSearch} placeholder="请输入" onSearch={() => ({})} />
       </div>
@@ -158,23 +206,50 @@ class BasicList extends PureComponent {
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,
-      pageSize: 5,
+      pageSize: 20,
       total: 50,
     };
 
-    const ListContent = ({ data: { owner, createdAt, percent, status } }) => (
+    const ListContent = ({ data: { userName, courseState, term } }) => (
       <div className={styles.listContent}>
         <div className={styles.listContentItem}>
-          <span>Owner</span>
-          <p>{owner}</p>
+          <span>开课人</span>
+          <p>{userName}</p>
         </div>
+
         <div className={styles.listContentItem}>
+          <span>课程状态</span>
+          {!courseState ? (
+            <div>
+              <Tag color="#108ee9">待审核</Tag>
+            </div>
+          ) : null}
+          {courseState == 1 ? (
+            <div>
+              <Tag color="#87d068">已通过</Tag>
+            </div>
+          ) : null}
+          {courseState == 2 ? (
+            <div>
+              <Tag color="#f50">未通过</Tag>
+            </div>
+          ) : null}
+        </div>
+
+        <div className={styles.listContentItem}>
+          <span>开课学期</span>
+          {term == '20172' ? <p>2017秋季学期</p> : null}
+          {term == '20181' ? <p>2018春季学期</p> : null}
+          {term == '20182' ? <p>2018秋季学期</p> : null}
+          {term == '20191' ? <p>2019春季学期</p> : null}
+        </div>
+        {/* <div className={styles.listContentItem}>
           <span>开始时间</span>
           <p>{moment(createdAt).format('YYYY-MM-DD HH:mm')}</p>
         </div>
         <div className={styles.listContentItem}>
           <Progress percent={percent} status={status} strokeWidth={6} style={{ width: 180 }} />
-        </div>
+        </div> */}
       </div>
     );
 
@@ -182,8 +257,9 @@ class BasicList extends PureComponent {
       <Dropdown
         overlay={
           <Menu onClick={({ key }) => editAndDelete(key, props.current)}>
-            <Menu.Item key="edit">编辑</Menu.Item>
-            <Menu.Item key="delete">删除</Menu.Item>
+            {!props.current.courseState ? <Menu.Item key="pass">通过</Menu.Item> : null}
+            {!props.current.courseState ? <Menu.Item key="reject">拒绝</Menu.Item> : null}
+            <Menu.Item key="del">删除</Menu.Item>
           </Menu>
         }
       >
@@ -211,41 +287,26 @@ class BasicList extends PureComponent {
 
       return (
         <Form onSubmit={this.handleSubmit}>
-          <FormItem label="任务名称" {...this.formLayout}>
-            {getFieldDecorator('title', {
-              rules: [{ required: true, message: '请输入任务名称' }],
-              initialValue: current.title,
-            })(<Input placeholder="请输入" />)}
+          <FormItem label="课程ID" {...this.formLayout}>
+            <span className="ant-form-text">{current.courseId}</span>
+          </FormItem>{' '}
+          <FormItem label="课程名称" {...this.formLayout}>
+            <span className="ant-form-text">{current.courseName}</span>
           </FormItem>
-          <FormItem label="开始时间" {...this.formLayout}>
-            {getFieldDecorator('createdAt', {
-              rules: [{ required: true, message: '请选择开始时间' }],
-              initialValue: current.createdAt ? moment(current.createdAt) : null,
-            })(
-              <DatePicker
-                showTime
-                placeholder="请选择"
-                format="YYYY-MM-DD HH:mm:ss"
-                style={{ width: '100%' }}
-              />
-            )}
+          <FormItem label="课程内容" {...this.formLayout}>
+            <span className="ant-form-text">{current.courseContent}</span>
           </FormItem>
-          <FormItem label="任务负责人" {...this.formLayout}>
-            {getFieldDecorator('owner', {
-              rules: [{ required: true, message: '请选择任务负责人' }],
-              initialValue: current.owner,
-            })(
-              <Select placeholder="请选择">
-                <SelectOption value="付晓晓">付晓晓</SelectOption>
-                <SelectOption value="周毛毛">周毛毛</SelectOption>
-              </Select>
-            )}
+          <FormItem label="开课教师" {...this.formLayout}>
+            <span className="ant-form-text">{current.userName}</span>
+          </FormItem>{' '}
+          <FormItem label="选课密码" {...this.formLayout}>
+            <span className="ant-form-text">{current.coursePassword}</span>
+          </FormItem>{' '}
+          <FormItem label="开课学期" {...this.formLayout}>
+            <span className="ant-form-text">{current.term}</span>
           </FormItem>
-          <FormItem {...this.formLayout} label="产品描述">
-            {getFieldDecorator('subDescription', {
-              rules: [{ message: '请输入至少五个字符的产品描述！', min: 5 }],
-              initialValue: current.subDescription,
-            })(<TextArea rows={4} placeholder="请输入至少五个字符" />)}
+          <FormItem label="" {...this.formLayout}>
+            <span className="ant-form-text" />
           </FormItem>
         </Form>
       );
@@ -256,17 +317,24 @@ class BasicList extends PureComponent {
           <Card bordered={false}>
             <Row>
               <Col sm={8} xs={24}>
-                <Info title="所有课程" value={`${list.length  }门课程`} bordered />
+                <Info title="所有课程" value={`${list.length}门课程`} bordered />
               </Col>
               <Col sm={8} xs={24}>
                 <Info
                   title="已审核课程"
-                  value={`${list.filter(e => e.courseState == 1).length  }门课程`}
+                  value={`${
+                    list.filter(e => e.courseState == 1 || e.courseState == 2).length
+                  }门课程`}
                   bordered
                 />
               </Col>
               <Col sm={8} xs={24}>
-                <Info title="待审核课程" value={`${list.filter(e => e.courseState == 0||e.courseState==null).length  }门课程`} />
+                <Info
+                  title="待审核课程"
+                  value={`${
+                    list.filter(e => e.courseState == 0 || e.courseState == null).length
+                  }门课程`}
+                />
               </Col>
             </Row>
           </Card>
@@ -274,7 +342,7 @@ class BasicList extends PureComponent {
           <Card
             className={styles.listCard}
             bordered={false}
-            title="标准列表"
+            title="课程列表"
             style={{ marginTop: 24 }}
             bodyStyle={{ padding: '0 32px 40px 32px' }}
             extra={extraContent}
@@ -297,7 +365,7 @@ class BasicList extends PureComponent {
               rowKey="id"
               loading={loading}
               pagination={paginationProps}
-              dataSource={list}
+              dataSource={this.getList()}
               renderItem={item => (
                 <List.Item
                   actions={[
@@ -307,15 +375,18 @@ class BasicList extends PureComponent {
                         this.showEditModal(item);
                       }}
                     >
-                      编辑
+                      查看
                     </a>,
                     <MoreBtn current={item} />,
                   ]}
                 >
                   <List.Item.Meta
-                    avatar={<Avatar src={item.logo} shape="square" size="large" />}
-                    title={<a href={item.href}>{item.title}</a>}
-                    description={item.subDescription}
+                    avatar={
+                      <Avatar shape="square" size="large">
+                        {item.courseName[0]}
+                      </Avatar>
+                    }
+                    title={item.courseName}
                   />
                   <ListContent data={item} />
                 </List.Item>
@@ -324,7 +395,7 @@ class BasicList extends PureComponent {
           </Card>
         </div>
         <Modal
-          title={done ? null : `任务${current ? '编辑' : '添加'}`}
+          title="课程详情"
           className={styles.standardListForm}
           width={640}
           bodyStyle={done ? { padding: '72px 0' } : { padding: '28px 0 0' }}

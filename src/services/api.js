@@ -138,7 +138,24 @@ export async function addCourse(params) {
   });
 }
 export async function queryAllCourse() {
-  return request('http://lab.lli.fun/lab/api/v1/course/allCourseList', {
+  console.log(123);
+  return request('http://lab.lli.fun/api/v1/course/allCourseList', {
     method: 'POST',
   });
+}
+export async function changeCourseState({ courseId, courseState }) {
+  return request(
+    `http://lab.lli.fun/lab/api/v1/course/checkCourse?courseId=${courseId}&courseState=${courseState}`,
+    {
+      method: 'POST',
+    }
+  );
+}
+export async function delCourse({ courseId, courseState }) {
+  return request(
+    `http://lab.lli.fun/lab/api/v1/course/deleteCourse?courseId=${courseId}&courseState=${courseState}`,
+    {
+      method: 'POST',
+    }
+  );
 }

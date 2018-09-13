@@ -1,5 +1,11 @@
 import { routerRedux } from 'dva/router';
-import { queryAllCourse, addCourse as add } from '@/services/api';
+import {} from 'dva';
+import {
+  queryAllCourse,
+  addCourse as add,
+  changeCourseState as changeCS,
+  delCourse,
+} from '@/services/api';
 
 export default {
   namespace: 'course',
@@ -20,6 +26,26 @@ export default {
       );
     },
     *fetchAllCourse({ payload }, { call, put }) {
+      const response = yield call(queryAllCourse);
+      yield put({
+        type: 'queryAll',
+        payload: response,
+      });
+    },
+    *changeCourseState({ payload }, { call, put }) {
+      yield call(changeCS, payload);
+      const response = yield call(queryAllCourse);
+      yield put({
+        type: 'queryAll',
+        payload: response,
+      });
+      yield put({
+        type: 'queryAll',
+        payload: response,
+      });
+    },
+    *deleteCourse({ payload }, { call, put }) {
+      yield call(delCourse, payload);
       const response = yield call(queryAllCourse);
       yield put({
         type: 'queryAll',
