@@ -3,14 +3,19 @@ import {} from 'dva';
 import {
   queryAllCourse,
   addCourse as add,
+  queryMyCourse,
   changeCourseState as changeCS,
   delCourse,
+  searchCourse as search,
+  select,
+  quit,
 } from '@/services/api';
 
 export default {
   namespace: 'course',
   state: {
     list: [],
+    course: [],
   },
 
   effects: {
@@ -27,6 +32,13 @@ export default {
     },
     *fetchAllCourse({ payload }, { call, put }) {
       const response = yield call(queryAllCourse);
+      yield put({
+        type: 'queryAll',
+        payload: response,
+      });
+    },
+    *fetchMyCourse({ payload }, { call, put }) {
+      const response = yield call(queryMyCourse);
       yield put({
         type: 'queryAll',
         payload: response,
@@ -52,6 +64,32 @@ export default {
         payload: response,
       });
     },
+    *searchCourse({ payload }, { call, put }) {
+      const response = yield call(search);
+      yield call(() => {
+        console.log(response);
+      });
+      yield put({
+        type: 'search',
+        payload: response,
+      });
+    },
+    *selectCourse({ payload }, { call, put }) {
+      yield call(select, payload);
+      const response = yield call(queryMyCourse);
+      yield put({
+        type: 'queryAll',
+        payload: response,
+      });
+    },
+    *quitCourse({ payload }, { call, put }) {
+      yield call(quit, payload);
+      const response = yield call(queryMyCourse);
+      yield put({
+        type: 'queryAll',
+        payload: response,
+      });
+    },
   },
 
   reducers: {
@@ -59,6 +97,12 @@ export default {
       return {
         ...state,
         list: action.payload,
+      };
+    },
+    search(state, action) {
+      return {
+        ...state,
+        course: action.payload,
       };
     },
   },

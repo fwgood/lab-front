@@ -161,7 +161,7 @@ class BasicList extends PureComponent {
             courseId: currentItem.courseId,
             courseState: 1,
           },
-        })
+        });
       } else if (key === 'reject') {
         this.props.dispatch({
           type: 'course/changeCourseState',
@@ -169,15 +169,15 @@ class BasicList extends PureComponent {
             courseId: currentItem.courseId,
             courseState: 2,
           },
-        })
-      }else if(key === 'del'){
+        });
+      } else if (key === 'del') {
         this.props.dispatch({
           type: 'course/deleteCourse',
           payload: {
             courseId: currentItem.courseId,
-            courseState: currentItem.courseState
+            courseState: currentItem.courseState,
           },
-        })
+        });
       }
     };
 
@@ -199,7 +199,6 @@ class BasicList extends PureComponent {
           <RadioButton value="success">审核通过</RadioButton>
           <RadioButton value="fail">审核失败</RadioButton>
         </RadioGroup>
-        <Search className={styles.extraContentSearch} placeholder="请输入" onSearch={() => ({})} />
       </div>
     );
 
@@ -347,19 +346,6 @@ class BasicList extends PureComponent {
             bodyStyle={{ padding: '0 32px 40px 32px' }}
             extra={extraContent}
           >
-            <Button
-              type="dashed"
-              style={{ width: '100%', marginBottom: 8 }}
-              icon="plus"
-              onClick={this.showModal}
-              ref={component => {
-                /* eslint-disable */
-                this.addBtn = findDOMNode(component);
-                /* eslint-enable */
-              }}
-            >
-              添加
-            </Button>
             <List
               size="large"
               rowKey="id"
