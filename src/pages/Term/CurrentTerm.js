@@ -38,7 +38,7 @@ class CardList extends PureComponent {
   }
   chekDetail = (flag, item) => {
     console.log(item)
-    this.props.history.push("/course")
+    this.props.history.push("/course/detail")
   }
   addOperate = () => {
     if (getAuth().role == '1') {
@@ -160,7 +160,7 @@ class CardList extends PureComponent {
 
     const teaInfo = {
       title: '我的班级',
-      courseOPerate: '开设课程',
+      courseOPerate: '开设班级',
       courseInfo: '',
     };
     const stuInfo = {
