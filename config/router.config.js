@@ -69,9 +69,9 @@ export default [
             component: './Course/AddCourse',
           },
           {
-            path:'/manage-course/my-class',
-            name:'myClass',
-            component:'./Term/CurrentTerm',
+            path: '/manage-course/my-class',
+            name: 'myClass',
+            component: './Term/CurrentTerm',
           },
           {
             path: '/manage-course/manage-course',
@@ -82,10 +82,22 @@ export default [
       },
       {
         path: '/course',
-        icon: 'form',
         name: 'course',
         hideInMenu: true,
-        component: './Term/CourseInfo',
+        routes: [
+          {
+            path: '/course/detail',
+            name: 'courseDetail',
+            component: './Term/CourseInfo',
+          },
+          {
+            path: '/course/grade',
+            name: 'grade',
+            hideInMenu: true,
+            component: './Grade/Grade',
+
+          }
+        ]
       },
       // list
       {
