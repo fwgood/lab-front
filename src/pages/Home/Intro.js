@@ -4,6 +4,7 @@ import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import styles from './Intro.less';
 import logo from '@/assets/logo.png';
 import {connect } from 'dva';
+import{getAuth} from "@/utils/auth"
 const FormItem = Form.Item;
 const { TextArea } = Input
 const formItemLayout = {

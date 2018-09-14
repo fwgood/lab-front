@@ -27,6 +27,13 @@ const checkStatus = response => {
     return response;
   }
   const errortext = codeMessage[response.status] || response.statusText;
+  if (response.status == 417) {
+    notification.error({
+      message: `错误`,
+      description: '账号或密码错误',
+    });
+    return
+  }
   notification.error({
     message: `请求错误 ${response.status}: ${response.url}`,
     description: errortext,
@@ -73,7 +80,6 @@ export default function request(
    * Produce fingerprints based on url and parameters
    * Maybe url has the same parameters
    */
-  console.log(url);
   const fingerprint = url + (options.body ? JSON.stringify(options.body) : '');
   const hashcode = hash
     .sha256()
@@ -136,7 +142,6 @@ export default function request(
   if (process.env.NODE_ENV == 'production') {
     url = baseUrl + url;
   }
-  console.log(url);
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response => cachedSave(response, hashcode))
@@ -161,6 +166,9 @@ export default function request(
       // environment should not be used
       if (status === 403) {
         router.push('/exception/403');
+        return;
+      }
+      if (status === 417) {
         return;
       }
       if (status <= 504 && status >= 500) {
