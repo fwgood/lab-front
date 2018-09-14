@@ -8,9 +8,14 @@ import {
   Modal,
   Input,
   Form,
+  AutoComplete,
+  message,
+  Select,
+  Popconfirm,
   Popover,
   Table,
 } from 'antd';
+import moment from "moment"
 import Ellipsis from '@/components/Ellipsis';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import debounce from 'lodash/debounce';
@@ -57,9 +62,10 @@ class CardList extends PureComponent {
   }
 
   chekDetail = (flag, item) => {
-    console.log(item)
-    this.props.history.push("/course/detail",item)
-  }
+    console.log(item);
+    this.props.history.push('/course',item);
+  };
+
   handleSelect = (a, b) => {
     // this.setState({
     //   current: a,
@@ -128,9 +134,25 @@ class CardList extends PureComponent {
 
   executeInfo = () => {
     // 执行发送通知
-    this.setState({
-      courseInfoVisible: false,
+    const {  form } = this.props;
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        const { dispatch } = this.props;
+        dispatch({
+          type: 'notice/addNotice',
+          payload: {
+            ...values,
+            announncementCourseId: this.state.currentCourse.courseId,
+            announncementType: 'string',
+            announncementTime: moment(new Date()).format('YYYY-MM-D H-m'),
+          },
+        });
+        this.setState({
+          courseInfoVisible: false,
+        });
+      }
     });
+
   };
 
   hideInfoDialog = () => {
@@ -207,26 +229,24 @@ class CardList extends PureComponent {
         cancelText="取消"
       >
         <Form onSubmit={this.handleSubmit}>
-          <FormItem {...formItemLayout} label="标题">
-            {getFieldDecorator('title', {
-              rules: [
-                {
-                  type: 'email',
-                  message: '请输入标题',
-                },
-              ],
-            })(<Input />)}
-          </FormItem>
-          <FormItem {...formItemLayout} label="公告内容">
-            {getFieldDecorator('content', {
-              rules: [
-                {
-                  type: 'email',
-                  message: '请输入内容',
-                },
-              ],
-            })(<TextArea />)}
-          </FormItem>
+        <FormItem {...formItemLayout} label="标题">
+              {getFieldDecorator('announncementTitle', {
+                rules: [
+                  {
+                    message: '请输入标题',
+                  },
+                ],
+              })(<Input />)}
+            </FormItem>
+            <FormItem {...formItemLayout} label="公告内容">
+              {getFieldDecorator('announncementContent', {
+                rules: [
+                  {
+                    message: '请输入内容',
+                  },
+                ],
+              })(<TextArea />)}
+            </FormItem>
         </Form>
       </Modal>
     );
@@ -240,7 +260,7 @@ class CardList extends PureComponent {
 
     const teaInfo = {
       title: '我的班级',
-      courseOPerate: '开设班级',
+      courseOPerate: '开设课程',
       courseInfo: '',
     };
     const stuInfo = {
@@ -251,10 +271,7 @@ class CardList extends PureComponent {
 
     const content = (
       <div>
-        <Input style={{ width: 120 }} onChange={this.handlePassChange} />
-        <Button type="ghost" onClick={this.handlePass}>
-          添加
-        </Button>
+
       </div>
     );
 

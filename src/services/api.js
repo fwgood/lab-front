@@ -122,10 +122,6 @@ export async function fakeRegister(params) {
   });
 }
 
-export async function queryNotices() {
-  return request('/api/notices');
-}
-
 export async function getFakeCaptcha(mobile) {
   return request(`/api/captcha?mobile=${mobile}`);
 }
@@ -181,5 +177,16 @@ export async function select(params) {
 export async function quit(params) {
   return request(`http://lab.lli.fun/lab/api/v1/course/dropCourse?courseId=${params.courseId}`, {
     method: 'POST',
+  });
+}
+export async function addNotice(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/anno/publishAnno`, {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function queryNotice(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/anno/annoList`, {
+    method: 'GET',
   });
 }

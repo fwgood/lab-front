@@ -1,22 +1,25 @@
 import React, { PureComponent } from 'react';
 import { Card, Row, Col, Tag, Divider, Button, Modal, Input, Form } from 'antd';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
-import styles from './Intro.less';
 import logo from '@/assets/logo.png';
-import {connect } from 'dva';
-import {getAuth} from '@/utils/auth'
+import { connect } from 'dva';
+import { getAuth } from '@/utils/auth';
+import moment from 'moment';
+import styles from './Intro.less';
+
 const FormItem = Form.Item;
-const { TextArea } = Input
+const { TextArea } = Input;
 const formItemLayout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 15 },
 };
-@connect(({ login, loading }) => ({
+@connect(({ login, loading, notice }) => ({
   login,
+  notice,
+  loading: loading.models.notice,
 }))
 @Form.create()
 class Center extends PureComponent {
-
   state = {
     visible: false,
     currentNews: '',
@@ -49,14 +52,37 @@ class Center extends PureComponent {
       },
     ],
   };
+
   showModal = () => {
     this.setState({
       infoVisible: true,
     });
-  }
+  };
+
+  handleSubmit = e => {
+    const { dispatch, form } = this.props;
+    e.preventDefault();
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        const { dispatch } = this.props;
+        dispatch({
+          type: 'notice/addNotice',
+          payload: {
+            ...values,
+            announncementCourseId: 0,
+            announncementType: 'string',
+            announncementTime: moment(new Date()).format('YYYY-MM-D H-m'),
+          },
+        });
+        this.setState({
+          infoVisible: false,
+        });
+      }
+    });
+  };
 
   handleInfoOk = () => {
-    console.log(this.state.infoObj)
+    console.log(this.state.infoObj);
     this.setState({
       confirmLoading: true,
     });
@@ -67,14 +93,14 @@ class Center extends PureComponent {
         confirmLoading: false,
       });
     }, 2000);
-  }
+  };
 
   handleInfoCancel = () => {
     console.log('Clicked cancel button');
     this.setState({
       infoVisible: false,
     });
-  }
+  };
 
   handleOk = () => {
     this.setState({
@@ -98,44 +124,59 @@ class Center extends PureComponent {
 
     return (
       <div>
-        <Modal title="公告"
+        <Modal
+          title="公告"
           visible={this.state.infoVisible}
+          footer={null}
           onOk={this.handleInfoOk}
           confirmLoading={this.state.confirmLoading}
           onCancel={this.handleInfoCancel}
         >
-          <Form  onSubmit={this.handleSubmit}>
-            <FormItem
-              {...formItemLayout}
-              label="标题"
-            >
-              {getFieldDecorator('title', {
-                rules: [{
-                  type: 'email', message: '请输入标题',
-                }],
-              })(
-                <Input />
-              )}
+          <Form onSubmit={this.handleSubmit}>
+            <FormItem {...formItemLayout} label="标题">
+              {getFieldDecorator('announncementTitle', {
+                rules: [
+                  {
+                    message: '请输入标题',
+                  },
+                ],
+              })(<Input />)}
             </FormItem>
-            <FormItem
-              {...formItemLayout}
-              label="公告内容"
-            >
-              {getFieldDecorator('content', {
-                rules: [{
-                  type: 'email', message: '请输入内容',
-                }],
-              })(
-                <TextArea />
-              )}
+            <FormItem {...formItemLayout} label="公告内容">
+              {getFieldDecorator('announncementContent', {
+                rules: [
+                  {
+                    message: '请输入内容',
+                  },
+                ],
+              })(<TextArea />)}
+            </FormItem>
+            <FormItem {...formItemLayout} label="操作">
+              <Button
+                loading={this.props.loading}
+                onSubmit={this.handleSubmit}
+                htmlType="submit"
+                style={{ marginRight: 16 }}
+              >
+                发布
+              </Button>
+              <Button
+                onClick={() => {
+                  this.setState({
+                    infoVisible: false,
+                  });
+                }}
+              >
+                取消
+              </Button>
             </FormItem>
           </Form>
         </Modal>
       </div>
     );
   }
-  render() {
 
+  render() {
     return (
       <GridContent className={styles.userCenter}>
         <Row gutter={24}>
@@ -173,10 +214,21 @@ class Center extends PureComponent {
             </Card>
           </Col>
           <Col lg={17} md={24}>
-            <Card title="最近新闻" className={styles.tabsCard} bordered={false} extra={<a style={getAuth().role=='2'?{visibility:"hidden"}:{}} onClick={() => this.showModal()}>发布公告</a>}>
+            <Card
+              title="最近新闻"
+              className={styles.tabsCard}
+              bordered={false}
+              extra={
+                <a
+                  style={getAuth().role == '2' ? { visibility: 'hidden' } : {}}
+                  onClick={() => this.showModal()}
+                >
+                  发布公告
+                </a>
+              }
+            >
               {this.renderInfo()}
               <span>
-
                 <Row>
                   {this.state.newsList.map(n => (
                     <Col lg={24} md={24} key={n.key}>
