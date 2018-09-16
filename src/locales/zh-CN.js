@@ -44,8 +44,10 @@ export default {
   'menu.exception.trigger': '触发错误',
   'menu.account': '个人页',
   'menu.account.settings':'设置',
+  
   'menu.account.center': '个人中心',
   'menu.account.discuss': '讨论区帖子',
+  "menu.account.detail":'帖子详情',
   'menu.account.trigger': '触发报错',
   'menu.account.analysis': '消息',
   'app.home.introduce': '介绍',

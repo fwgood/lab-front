@@ -281,12 +281,9 @@ class FilterCardList extends PureComponent {
                                         <Icon type="edit" />
                                     </Tooltip>,
                                     
-                                    <Tooltip title={getAuth().role != '2' ? "评分":"论坛"} onClick={() => { this.props.history.push("/course/grade") }}>
+                                    <Tooltip title={getAuth().role != '2' ? "评分":"论坛"} onClick={() => {getAuth().role == '2'? this.props.history.push("/account/discuss"):this.props.history.push("/course/grade") }}>
                                         {getAuth().role!='2' ? <Icon type="check" theme="outlined" />:<Icon type="message" theme="outlined" />}
                                     </Tooltip>
-                                    //   <Dropdown overlay={itemMenu}>
-                                    //     <Icon type="ellipsis" />
-                                    //   </Dropdown>,
                                 ]}
                             >
                                 <Card.Meta avatar={<Avatar size="small" src={item.avatar} />} title={item.title} />

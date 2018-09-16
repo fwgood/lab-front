@@ -6,6 +6,7 @@ export default [
     routes: [
       { path: '/user', redirect: '/user/login' },
       { path: '/user/login', component: './User/Login' },
+      { path: '/user/register', component: './User/Register' }
     ],
   },
   // app
@@ -242,6 +243,13 @@ export default [
             name: 'discuss',
             component: './Discuss/Discuss',
           },
+          {
+            path: '/account/discuss/detail',
+            name: 'detail',
+            hideInMenu: true,
+            component: './Discuss/DiscussDetail',
+
+          }
         ],
       },
       {
