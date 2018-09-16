@@ -92,7 +92,6 @@ export default class GlobalHeaderRight extends PureComponent {
       </Menu>
     );
     const noticeData = this.getNoticeData();
-    console.log(noticeData);
     let className = styles.right;
     if (theme === 'dark') {
       className = `${styles.right}  ${styles.dark}`;

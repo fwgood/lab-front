@@ -190,3 +190,14 @@ export async function queryNotice(params) {
     method: 'GET',
   });
 }
+export async function addLab(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/lab/addLab`, {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function queryLab(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/lab/labList?courseId=${params.courseId}`, {
+    method: 'POST',
+  });
+}

@@ -30,53 +30,48 @@ export default [
         path: '/form',
         icon: 'form',
         name: 'form',
+        authority: ['1', '2'],
         routes: [
-          {
-            path: '/form/test-form',
-            name: 'testform',
-            component: './Forms/BasicForm',
-          },
           {
             path: '/form/basic-form',
             name: 'basicform',
             component: './Term/CurrentTerm',
           },
-          {
-            path: '/form/step-form',
-            name: 'stepform',
-            component: './Forms/StepForm',
-          },
-          {
-            path: '/form/advanced-form',
-            name: 'advancedform',
-            component: './Forms/AdvancedForm',
-          },
-          {
-            path: '/form/add-course',
-            name: 'addCourse',
-            component: './Forms/AddCourse',
-          },
+          // {
+          //   path: '/form/step-form',
+          //   name: 'stepform',
+          //   component: './Forms/StepForm',
+          // },
+          // {
+          //   path: '/form/advanced-form',
+          //   name: 'advancedform',
+          //   component: './Forms/AdvancedForm',
+          // },
+          // {
+          //   path: '/form/add-course',
+          //   name: 'addCourse',
+          //   component: './Forms/AddCourse',
+          // },
         ],
       },
       {
         path: '/manage-course',
         name: 'manage-course',
         icon: 'form',
+        authority: ['1', '0'],
         routes: [
           {
             path: '/manage-course/add-course',
             name: 'addCourse',
             component: './Course/AddCourse',
+            authority: ['1'],
           },
-          {
-            path: '/manage-course/my-class',
-            name: 'myClass',
-            component: './Term/CurrentTerm',
-          },
+
           {
             path: '/manage-course/manage-course',
             name: 'manageCourse',
             component: './Course/ManageCourse',
+            authority: ['0'],
           },
         ],
       },
@@ -95,15 +90,15 @@ export default [
             name: 'grade',
             hideInMenu: true,
             component: './Grade/Grade',
-
-          }
-        ]
+          },
+        ],
       },
       // list
       {
         path: '/list',
         icon: 'table',
         name: 'list',
+        hideInMenu: true,
         routes: [
           {
             path: '/list/table-list',
@@ -152,6 +147,7 @@ export default [
         path: '/profile',
         name: 'profile',
         icon: 'profile',
+        hideInMenu: true,
         routes: [
           // profile
           {
@@ -170,6 +166,7 @@ export default [
         name: 'result',
         icon: 'check-circle-o',
         path: '/result',
+        hideInMenu: true,
         routes: [
           // result
           {
@@ -184,6 +181,7 @@ export default [
         name: 'exception',
         icon: 'warning',
         path: '/exception',
+        hideInMenu: true,
         routes: [
           // exception
           {

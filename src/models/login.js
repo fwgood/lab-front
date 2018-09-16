@@ -17,7 +17,10 @@ export default {
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(login, payload);
-
+      if (!response) {
+        return;
+      }
+      reloadAuthorized();
       // Login successfully
       if (response.code === 200) {
         yield put({
@@ -31,6 +34,10 @@ export default {
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
+        if (redirect.match(/login/)) {
+          yield put(routerRedux.replace('/'));
+          return;
+        }
         if (redirect) {
           const redirectUrlParams = new URL(redirect);
           if (redirectUrlParams.origin === urlParams.origin) {
@@ -59,6 +66,7 @@ export default {
           status: false,
         },
       });
+      reloadAuthorized();
       yield put(
         routerRedux.push({
           pathname: '/user/login',
@@ -77,6 +85,7 @@ export default {
         localStorage.clear();
       } else if (payload.status == true) {
         setAuth({ role: payload.role, token: payload.token });
+        setAuthority(payload.role);
       }
       return {
         role: payload.role,

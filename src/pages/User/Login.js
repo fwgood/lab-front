@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Checkbox, Alert, Icon } from 'antd';
 import Login from '@/components/Login';
+import { message } from 'antd';
 import styles from './Login.less';
 
 const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
@@ -51,6 +52,7 @@ class LoginPage extends Component {
       this.setState({
         isFailed: true,
       });
+      message.warning('此次登陆似乎耗时过多，请检查网络环境或重试');
     }, 2000);
     const { type } = this.state;
     if (!err) {
