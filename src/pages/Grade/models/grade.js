@@ -12,7 +12,7 @@ export default {
       const response = yield call(query, payload);
       yield put({
         type: 'fetchScore',
-        payload: response,
+        payload: response.list,
       });
     },
     *addScore({ payload }, { call, put }) {
@@ -20,7 +20,7 @@ export default {
       const response = yield call(query, payload);
       yield put({
         type: 'fetchScore',
-        payload: response,
+        payload: response.list,
       });
     },
   },

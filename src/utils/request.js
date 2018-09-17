@@ -32,7 +32,7 @@ const checkStatus = response => {
       message: `错误`,
       description: '账号或密码错误',
     });
-    return
+    return;
   }
   notification.error({
     message: `请求错误 ${response.status}: ${response.url}`,
@@ -76,6 +76,7 @@ export default function request(
     expirys: isAntdPro(),
   }
 ) {
+  console.log(url);
   /**
    * Produce fingerprints based on url and parameters
    * Maybe url has the same parameters

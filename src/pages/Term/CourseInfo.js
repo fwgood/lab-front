@@ -70,14 +70,14 @@ class FilterCardList extends PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    if(getAuthority=='1'){
+    if (getAuthority()[0] == '1') {
       dispatch({
         type: 'lab/queryAll',
         payload: {
           courseId: this.props.location.state.courseId,
         },
       });
-    }else{
+    } else {
       dispatch({
         type: 'lab/queryMyLab',
         payload: {
@@ -414,7 +414,14 @@ class FilterCardList extends PureComponent {
                   <Tooltip
                     title={getAuth().role != '2' ? '评分' : '论坛'}
                     onClick={() => {
-                      this.props.history.push('/course/grade', item);
+                      switch (getAuth().role) {
+                        case '1':
+                          this.props.history.push('/course/grade', item);
+                          break;
+                        case '2':
+                          this.props.history.push('/account/discuss', item);
+                          break;
+                      }
                     }}
                   >
                     {getAuth().role != '2' ? (

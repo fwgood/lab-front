@@ -33,7 +33,8 @@ class Center extends PureComponent {
     dispatch({
       type: 'blog/queryMyBlog',
       payload: {
-        count: 8,
+        page: 1,
+        pageSize: 20,
       },
     });
     dispatch({

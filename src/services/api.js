@@ -1,5 +1,6 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
+import Axios from 'axios';
 
 export async function queryProjectNotice() {
   return request('/api/project/notice');
@@ -140,7 +141,8 @@ export async function queryAllCourse() {
 }
 export async function queryMyCourse() {
   return request('http://lab.lli.fun/api/v1/course/courseList', {
-    method: 'GET',
+    method: 'POST',
+    body: {},
   });
 }
 export async function changeCourseState({ courseId, courseState }) {
@@ -209,7 +211,8 @@ export async function queryMyLab(params) {
 }
 export async function queryScore(params) {
   return request(`http://lab.lli.fun/lab/api/v1/lab/scoreList?labId=${params.labId}`, {
-    method: 'GET',
+    method: 'POST',
+    body: {},
   });
 }
 export async function addBlog(params) {
@@ -219,13 +222,34 @@ export async function addBlog(params) {
   });
 }
 export async function queryBlog(params) {
+  console.log(params);
   return request(`http://lab.lli.fun/lab/api/v1/blog/blogList?courseId=${params.courseId}`, {
-    method: 'GET',
+    method: 'POST',
+    body: {
+      page: params.page,
+      pageSize: params.pageSize,
+      sort: 'asc',
+    },
   });
 }
-export async function queryMyBlog() {
+export async function queryMyBlog(params) {
   return request(`http://lab.lli.fun/lab/api/v1/blog/userBlogList`, {
-    method: 'GET',
+    method: 'POST',
+    body: {
+      page: params.page,
+      pageSize: params.pageSize,
+      sort: 'asc',
+    },
+  });
+}
+export async function searchBlog(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/blog/searchBlog?param=${params.param}`, {
+    method: 'POST',
+    body: {
+      page: params.page,
+      pageSize: params.pageSize,
+      sort: 'asc',
+    },
   });
 }
 export async function addCommit(params) {
@@ -254,4 +278,8 @@ export async function getComment(params) {
   return request(`http://lab.lli.fun/lab/api/v1/blog/getComments?parentId=${params.parentId}`, {
     method: 'POST',
   });
+}
+export async function register(params) {
+  console.log(params);
+  return Axios.post(`http://lab.lli.fun/lab/api/v1/user/regist`, params);
 }

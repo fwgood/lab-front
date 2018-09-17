@@ -14,7 +14,7 @@ const pageSize = 5;
 @connect(({ list, loading, blog }) => ({
   list,
   blog,
-  loading: loading.models.list,
+  loading: loading.models.blog,
 }))
 class SearchList extends Component {
   state = {
@@ -28,11 +28,12 @@ class SearchList extends Component {
     dispatch({
       type: 'blog/queryBlog',
       payload: {
-          courseId:0
+        courseId: 0,
+        page: 1,
+        pageSize: 20,
       },
     });
   }
-
   fetchMore = () => {
     const { dispatch } = this.props;
     dispatch({
@@ -45,7 +46,15 @@ class SearchList extends Component {
 
   searchDiscuss = value => {
     // 搜索处理
-    console.log(value);
+    this.props.dispatch({
+      type: 'blog/search',
+      payload: {
+        param:value,
+        courseId: 0,
+        page: 1,
+        pageSize: 20,
+      },
+    });
   };
 
   editDiscuss = () => {
@@ -98,9 +107,10 @@ class SearchList extends Component {
   publishDiscuss = () => {
     if (this.state.mdeValue == '') {
       message.warn('您还没有输入博客内容');
-    } if (this.state.title == '') {
+    }
+    if (this.state.title == '') {
       message.warn('您还没有输入标题');
-    }else{
+    } else {
       this.props.dispatch({
         type: 'blog/addBlog',
         payload: {
@@ -116,15 +126,14 @@ class SearchList extends Component {
         editPanelVisible: false,
       });
     }
-
   };
 
   render() {
     const {
-      blog:{blogs},
+      blog: { blogs },
       loading,
     } = this.props;
-
+    console.log(blogs);
     const IconText = ({ type, text }) => (
       <span>
         <Icon type={type} style={{ marginRight: 8 }} />
@@ -132,11 +141,11 @@ class SearchList extends Component {
       </span>
     );
 
-    const ListContent = ({ data: { content, blogTime, avatar, owner, href,userNickname } }) => (
+    const ListContent = ({ data: { content, blogTime, avatar, owner, href, userNickname } }) => (
       <div className={styles.listContent}>
         <div className={styles.description}>{content}</div>
         <div className={styles.extra}>
-          <Avatar  size="small" >{userNickname}</Avatar>
+          <Avatar size="small">{userNickname}</Avatar>
           {userNickname} 发布于 {blogTime}
           <em>{}</em>
         </div>
@@ -222,7 +231,7 @@ class SearchList extends Component {
                   <a
                     className={styles.listItemMetaTitle}
                     onClick={() => {
-                      this.props.history.push('/account/discuss/detail',item);
+                      this.props.history.push('/account/discuss/detail', item);
                     }}
                   >
                     <MarkDodn source={item.blogContent} />

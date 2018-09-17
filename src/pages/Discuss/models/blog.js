@@ -6,6 +6,7 @@ import {
   queryMyBlog as queryMy,
   addComment as addC,
   getComment as getC,
+  searchBlog,
 } from '@/services/api';
 
 export default {
@@ -19,6 +20,7 @@ export default {
 
   effects: {
     *queryBlog({ payload }, { call, put }) {
+      console.log(payload);
       const response = yield call(query, payload);
       yield put({
         type: 'fetchBlog',
@@ -58,13 +60,20 @@ export default {
         payload: response,
       });
     },
+    *search({payload},{call,put}){
+      const response=yield call(searchBlog,payload)
+      yield put({
+        type: 'fetchBlog',
+        payload: response,
+      });
+    }
   },
 
   reducers: {
     fetchBlog(state, { payload }) {
       return {
         ...state,
-        blogs: payload,
+        blogs: payload.list,
       };
     },
     fetchComment(state, { payload }) {

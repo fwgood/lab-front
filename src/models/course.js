@@ -41,7 +41,7 @@ export default {
       const response = yield call(queryMyCourse);
       yield put({
         type: 'queryAll',
-        payload: response,
+        payload: response.list,
       });
     },
     *changeCourseState({ payload }, { call, put }) {

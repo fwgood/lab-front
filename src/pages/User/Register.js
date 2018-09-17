@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import Link from 'umi/link';
-import {notification, Form, Input, Button, Select, Row, Col, Popover, Progress } from 'antd';
+import { notification, Form, Input, Button, Select, Row, Col, Popover, Progress } from 'antd';
 import styles from './Register.less';
-
+import router from 'umi/router';
 const FormItem = Form.Item;
 const { Option } = Select;
 const InputGroup = Input.Group;
@@ -22,7 +22,7 @@ const passwordProgressMap = {
 
 @connect(({ register, loading }) => ({
   register,
-  submitting: loading.effects['register/submit'],
+  submitting: loading.effects['register/register'],
 }))
 @Form.create()
 class Register extends Component {
@@ -34,15 +34,9 @@ class Register extends Component {
     prefix: '86',
   };
 
-
-
-
-
-
-
   getPasswordStatus = () => {
     const { form } = this.props;
-    const value = form.getFieldValue('password');
+    const value = form.getFieldValue('userPassword');
     if (value && value.length > 9) {
       return 'ok';
     }
@@ -59,20 +53,19 @@ class Register extends Component {
       if (!err) {
         const { prefix } = this.state;
         dispatch({
-          type: 'register/submit',
+          type: 'register/register',
           payload: {
             ...values,
-            prefix,
           },
         });
+        router.replace("/User/Login")
       }
     });
   };
 
-
   checkConfirm = (rule, value, callback) => {
     const { form } = this.props;
-    if (value && value !== form.getFieldValue('password')) {
+    if (value && value !== form.getFieldValue('userPassword')) {
       callback('两次输入的密码不匹配!');
     } else {
       callback();
@@ -108,11 +101,9 @@ class Register extends Component {
     }
   };
 
-
-
   renderPasswordProgress = () => {
     const { form } = this.props;
-    const value = form.getFieldValue('password');
+    const value = form.getFieldValue('userPassword');
     const passwordStatus = this.getPasswordStatus();
     return value && value.length ? (
       <div className={styles[`progress-${passwordStatus}`]}>
@@ -136,18 +127,22 @@ class Register extends Component {
         <h3>注册</h3>
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
-            {getFieldDecorator('mail', {
+            {getFieldDecorator('userName', {
               rules: [
                 {
                   required: true,
-                  message: '请输入邮箱地址！',
-                },
-                {
-                  type: 'email',
-                  message: '邮箱地址格式错误！',
                 },
               ],
-            })(<Input size="large" placeholder="邮箱" />)}
+            })(<Input size="large" placeholder="用户名" />)}
+          </FormItem>
+          <FormItem>
+            {getFieldDecorator('userNickname', {
+              rules: [
+                {
+                  required: true,
+                },
+              ],
+            })(<Input size="large" placeholder="昵称" />)}
           </FormItem>
           <FormItem help={help}>
             <Popover
@@ -164,7 +159,7 @@ class Register extends Component {
               placement="right"
               visible={visible}
             >
-              {getFieldDecorator('password', {
+              {getFieldDecorator('userPassword', {
                 rules: [
                   {
                     validator: this.checkPassword,
@@ -186,7 +181,7 @@ class Register extends Component {
               ],
             })(<Input size="large" type="password" placeholder="确认密码" />)}
           </FormItem>
-          
+
           <FormItem>
             <Button
               size="large"
@@ -194,13 +189,6 @@ class Register extends Component {
               className={styles.submit}
               type="primary"
               htmlType="submit"
-              onClick={()=>{console.log("注册")
-              notification["success"]({
-                message: '成功',
-                description: '您已经注册成功，请返回登陆',
-              });
-              this.props.history.push("/User/Login")
-            }}
             >
               注册
             </Button>
