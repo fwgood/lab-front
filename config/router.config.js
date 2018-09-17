@@ -6,6 +6,7 @@ export default [
     routes: [
       { path: '/user', redirect: '/user/login' },
       { path: '/user/login', component: './User/Login' },
+      { path: '/user/register', component: './User/Register' },
     ],
   },
   // app
@@ -30,29 +31,30 @@ export default [
         path: '/form',
         icon: 'form',
         name: 'form',
+        component: './Term/CurrentTerm',
         authority: ['1', '2'],
-        routes: [
-          {
-            path: '/form/basic-form',
-            name: 'basicform',
-            component: './Term/CurrentTerm',
-          },
-          // {
-          //   path: '/form/step-form',
-          //   name: 'stepform',
-          //   component: './Forms/StepForm',
-          // },
-          // {
-          //   path: '/form/advanced-form',
-          //   name: 'advancedform',
-          //   component: './Forms/AdvancedForm',
-          // },
-          // {
-          //   path: '/form/add-course',
-          //   name: 'addCourse',
-          //   component: './Forms/AddCourse',
-          // },
-        ],
+        // routes: [
+        //   {
+        //     path: '/form/basic-form',
+        //     name: 'basicform',
+        //     component: './Term/CurrentTerm',
+        //   },
+        //   {
+        //     path: '/form/step-form',
+        //     name: 'stepform',
+        //     component: './Forms/StepForm',
+        //   },
+        //   {
+        //     path: '/form/advanced-form',
+        //     name: 'advancedform',
+        //     component: './Forms/AdvancedForm',
+        //   },
+        //   {
+        //     path: '/form/add-course',
+        //     name: 'addCourse',
+        //     component: './Forms/AddCourse',
+        //   },
+        // ],
       },
       {
         path: '/manage-course',
@@ -92,6 +94,13 @@ export default [
             component: './Grade/Grade',
           },
         ],
+      },
+      {
+        path: '/compiler',
+        name: 'compiler',
+        icon: 'forward',
+        // hideInMenu: true,
+        component: './Compiler/Compiler',
       },
       // list
       {
@@ -239,6 +248,12 @@ export default [
             path: '/account/discuss',
             name: 'discuss',
             component: './Discuss/Discuss',
+          },
+          {
+            path: '/account/discuss/detail',
+            name: 'detail',
+            hideInMenu: true,
+            component: './Discuss/DiscussDetail',
           },
         ],
       },

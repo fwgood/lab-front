@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 import numeral from 'numeral';
+import RenderAuthorized from '@/components/Authorized';
+import { getAuthority } from '@/utils/authority';
 import { connect } from 'dva';
 import {
   notification,
@@ -23,7 +25,6 @@ import {
 } from 'antd';
 
 import { formatWan } from '@/utils/utils';
-
 import styles from './CourseInfo.less';
 import { getAuth } from '@/utils/auth';
 
@@ -35,6 +36,7 @@ const formItemLayout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 15 },
 };
+const Authorized = RenderAuthorized(getAuthority());
 const rangeConfig = {
   rules: [{ type: 'array', required: true, message: 'Please select time!' }],
 };
@@ -68,12 +70,21 @@ class FilterCardList extends PureComponent {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'lab/queryAll',
-      payload: {
-        courseId: this.props.location.state.courseId,
-      },
-    });
+    if(getAuthority=='1'){
+      dispatch({
+        type: 'lab/queryAll',
+        payload: {
+          courseId: this.props.location.state.courseId,
+        },
+      });
+    }else{
+      dispatch({
+        type: 'lab/queryMyLab',
+        payload: {
+          courseId: this.props.location.state.courseId,
+        },
+      });
+    }
     console.log();
   }
 
@@ -104,11 +115,35 @@ class FilterCardList extends PureComponent {
   };
 
   okCommit = () => {
-    // 处理提交作业
-    this.setState({
-      commitVisible: false,
+    const { form } = this.props;
+    form.validateFieldsAndScroll((err, values) => {
+      console.log(values);
+      if (!values.upload) {
+        message.error('请上传文件');
+        return false;
+      }
+      console.log(this.state.currentLab);
+      console.log(values.upload[0].response);
+      this.props.dispatch({
+        type: 'lab/add',
+        payload: {
+          labId: this.state.currentLab.labId,
+          commitContent: values.desc,
+          commitUrl: `http://file.lli.fun/${values.upload[0].response.key}`,
+        },
+      });
+      // 处理发布作业
+      this.setState({
+        commitVisible: false,
+      });
     });
   };
+  // okCommit = () => {
+  //   // 处理提交作业
+  //   this.setState({
+  //     commitVisible: false,
+  //   });
+  // };
 
   handleFileChange = e => {
     console.log(e);
@@ -139,10 +174,12 @@ class FilterCardList extends PureComponent {
 
   renderAddLab() {
     const { getFieldDecorator } = this.props.form;
+    console.log(getAuthority()[0] === '1');
+
     return (
       <Modal
         destroyOnClose
-        title="发布"
+        title={getAuthority()[0] === '1' ? '发布' : '提交'}
         visible={this.state.labVisible}
         onOk={this.okHandle}
         onCancel={() => this.cancelAddLab()}
@@ -196,6 +233,7 @@ class FilterCardList extends PureComponent {
       // })
       this.setState({
         commitVisible: true,
+        currentLab: item,
       });
     } else if (getAuth().role == '1') {
       this.setState({
@@ -223,11 +261,12 @@ class FilterCardList extends PureComponent {
         }
       },
     };
+
     const { getFieldDecorator } = this.props.form;
     return (
       <Modal
         destroyOnClose
-        title="发布"
+        title={getAuthority()[0] === '1' ? '发布' : '提交'}
         visible={this.state.commitVisible}
         onOk={this.okCommit}
         onCancel={() => this.cancelAddLab()}
@@ -243,7 +282,13 @@ class FilterCardList extends PureComponent {
               valuePropName: 'fileList',
               getValueFromEvent: normFile,
             })(
-              <Dragger {...propty}>
+              <Dragger
+                action="http://upload-z2.qiniu.com"
+                listType="picture"
+                beforeUpload={this.handleFile}
+                data={this.state.qiniu}
+                onChange={this.handleFileChange}
+              >
                 <p className="ant-upload-drag-icon">
                   <Icon type="inbox" />
                 </p>
@@ -282,13 +327,14 @@ class FilterCardList extends PureComponent {
         >
           <div>
             <p>描述</p>
-            <p>{activeUser}</p>
           </div>
         </Popover>
-        <div>
-          <p>分数</p>
-          <p>{newUser}</p>
-        </div>
+        {getAuthority()[0] == '2' ? (
+          <div>
+            <p>分数</p>
+            <p>{newUser}</p>
+          </div>
+        ) : null}
       </div>
     );
 
@@ -318,19 +364,25 @@ class FilterCardList extends PureComponent {
         </Menu.Item>
       </Menu>
     );
-
+    const addBtn = (
+      <Button onClick={this.showAddLab}>
+        发布实验
+        <Icon type="plus-circle" theme="outlined" />
+      </Button>
+    );
     return (
       <div className={styles.filterCardList}>
-        <Card bordered={false} title="java班" extra="教师: 张三">
+        <Card
+          bordered={false}
+          title={this.props.location.state.courseName}
+          extra={`教师: ${this.props.location.state.userName}`}
+        >
           <Row gutter={16}>
             <Col lg={4} md={10} sm={10} xs={4}>
-              <Button onClick={this.showAddLab}>
-                发布实验
-                <Icon type="plus-circle" theme="outlined" />
-              </Button>
+              <Authorized children={addBtn} authority="1" onMatch={<h1>fds</h1>} />
             </Col>
-            <Col lg={8} md={10} sm={10} xs={24}>
-              课程简介 :
+            <Col lg={8} md={10} sm={10} xs={24} offset={12}>
+              课程简介 :{this.props.location.state.courseContent}
             </Col>
           </Row>
         </Card>
@@ -353,14 +405,16 @@ class FilterCardList extends PureComponent {
                       <Icon type="download" />
                     </a>
                   </Tooltip>,
-                  <Tooltip title="编辑" onClick={() => this.showEdit(item)}>
-                    <Icon type="edit" />
-                  </Tooltip>,
+                  getAuthority()[0] === '2' ? (
+                    <Tooltip title="提交" onClick={() => this.showEdit(item)}>
+                      <Icon type="edit" />
+                    </Tooltip>
+                  ) : null,
 
                   <Tooltip
                     title={getAuth().role != '2' ? '评分' : '论坛'}
                     onClick={() => {
-                      this.props.history.push('/course/grade');
+                      this.props.history.push('/course/grade', item);
                     }}
                   >
                     {getAuth().role != '2' ? (
@@ -369,18 +423,18 @@ class FilterCardList extends PureComponent {
                       <Icon type="message" theme="outlined" />
                     )}
                   </Tooltip>,
-                  //   <Dropdown overlay={itemMenu}>
-                  //     <Icon type="ellipsis" />
-                  //   </Dropdown>,
                 ]}
               >
-                <Card.Meta avatar={<Avatar size="small" src={item.avatar} />} title={item.title} />
+                <Card.Meta
+                  avatar={<Avatar size="small">{item.labName}</Avatar>}
+                  title={item.labName}
+                />
 
                 <div className={styles.cardItemContent}>
                   <CardInfo
                     item={item}
                     activeUser={formatWan(item.activeUser)}
-                    newUser={numeral(item.newUser).format('0,0')}
+                    newUser={numeral(item.score).format('0,0')}
                   />
                 </div>
               </Card>

@@ -49,7 +49,7 @@ export default class GlobalHeaderRight extends PureComponent {
       }
       return newNotice;
     });
-    return groupBy(newNotices, 'announncementCourseId');
+    return groupBy(newNotices, 'announncementType');
   }
 
   changLang = () => {
@@ -76,10 +76,10 @@ export default class GlobalHeaderRight extends PureComponent {
           <Icon type="user" />
           <FormattedMessage id="menu.account.center" defaultMessage="account center" />
         </Menu.Item>
-        <Menu.Item key="userinfo">
+        {/* <Menu.Item key="userinfo">
           <Icon type="setting" />
           <FormattedMessage id="menu.account.settings" defaultMessage="account settings" />
-        </Menu.Item>
+        </Menu.Item> */}
         <Menu.Item key="triggerError">
           <Icon type="close-circle" />
           <FormattedMessage id="menu.account.trigger" defaultMessage="Trigger Error" />
@@ -110,7 +110,7 @@ export default class GlobalHeaderRight extends PureComponent {
           popupAlign={{ offset: [20, -16] }}
         >
           <NoticeIcon.Tab
-            list={noticeData['0']}
+            list={noticeData['string']}
             title="通知"
             emptyText="你已查看所有通知"
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"

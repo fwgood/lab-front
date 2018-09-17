@@ -323,7 +323,7 @@ class CardList extends PureComponent {
             footer={null}
             onCancel={this.handleCancel}
           >
-            <Table dataSource={this.props.course.course} columns={columns} loading={loading} />
+            <Table dataSource={this.props.course.course} columns={columns} loading={loading} rowKey='courseId'/>
           </Modal>
 
           <div>{this.renderQuitDialog()}</div>
