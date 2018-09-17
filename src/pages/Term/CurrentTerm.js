@@ -51,7 +51,7 @@ class CardList extends PureComponent {
     current: {},
     pass: '',
     passVisible: 0,
-    inputValue:''
+    inputValue: '',
   };
 
   componentWillMount() {
@@ -67,13 +67,11 @@ class CardList extends PureComponent {
     this.props.history.push('/course/detail', item);
   };
 
-
   addOperate = () => {
     if (getAuth().role == '1') {
       this.props.history.push('/manage-course/add-course');
       // 跳转申请开课
-    } else getAuth().role == '2';
-    {
+    } else if (getAuth().role == '2') {
       this.fetchUser();
       this.setState({
         addCourseVisible: true,
@@ -297,7 +295,11 @@ class CardList extends PureComponent {
             <Popover
               content={
                 <div>
-                  <Input value={this.state.pass} onChange={this.handlePassChange} style={{width:120}}/>
+                  <Input
+                    value={this.state.pass}
+                    onChange={this.handlePassChange}
+                    style={{ width: 120 }}
+                  />
                   <Button onClick={this.handlePass}>选课</Button>
                 </div>
               }
@@ -323,7 +325,12 @@ class CardList extends PureComponent {
             footer={null}
             onCancel={this.handleCancel}
           >
-            <Table dataSource={this.props.course.course} columns={columns} loading={loading} rowKey='courseId'/>
+            <Table
+              dataSource={this.props.course.course}
+              columns={columns}
+              loading={loading}
+              rowKey="courseId"
+            />
           </Modal>
 
           <div>{this.renderQuitDialog()}</div>

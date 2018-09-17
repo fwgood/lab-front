@@ -164,6 +164,11 @@ export async function delCourse({ courseId, courseState }) {
 export async function searchCourse() {
   return request(`http://lab.lli.fun/lab/api/v1/course/stateCourseList`, {
     method: 'POST',
+    body: {
+      page: 1,
+      pageSize: 20,
+      sort: 'asc',
+    },
   });
 }
 export async function select(params) {

@@ -71,7 +71,7 @@ export default {
       });
       yield put({
         type: 'search',
-        payload: response,
+        payload: response.list,
       });
     },
     *selectCourse({ payload }, { call, put }) {

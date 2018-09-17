@@ -80,9 +80,9 @@ export default [
       {
         path: '/manage-user',
         name: 'managerUser',
-        icon:'team',
+        icon: 'team',
         component: './ManagerUser/UserList',
-        authority: ['0','1'],
+        authority: ['0'],
       },
       {
         path: '/course',
