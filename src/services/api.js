@@ -283,3 +283,22 @@ export async function register(params) {
   console.log(params);
   return Axios.post(`http://lab.lli.fun/lab/api/v1/user/regist`, params);
 }
+export async function queryUsers(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/user/getAllUser`, {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function delUser(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/user/deleteUser?userId=${params.userId}`, {
+    method: 'GET',
+  });
+}
+export async function modifyUser(params) {
+  return request(
+    `http://lab.lli.fun/lab/api/v1/user/updateState?role=${params.role}&userId=${params.userId}`,
+    {
+      method: 'GET',
+    }
+  );
+}

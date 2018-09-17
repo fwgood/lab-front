@@ -36,8 +36,6 @@ class StandardTable extends PureComponent {
     return null;
   }
 
-
-
   handleTableChange = (pagination, filters, sorter) => {
     const { onChange } = this.props;
     if (onChange) {
@@ -71,11 +69,9 @@ class StandardTable extends PureComponent {
         disabled: record.disabled,
       }),
     };
-
     return (
       <div className={styles.standardTable}>
-        <div className={styles.tableAlert}>
-        </div>
+        <div className={styles.tableAlert} />
         <Table
           loading={loading}
           rowKey={rowKey || 'key'}

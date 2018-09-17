@@ -139,10 +139,10 @@ export default function request(
   //     sessionStorage.removeItem(`${hashcode}:timestamp`);
   //   }
   // }
-  const baseUrl = 'http://lab.lli.fun';
-  if (process.env.NODE_ENV == 'production') {
-    url = baseUrl + url;
-  }
+  // const baseUrl = 'http://lab.lli.fun';
+  // if (process.env.NODE_ENV == 'production') {
+  //   url = baseUrl + url;
+  // }
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response => cachedSave(response, hashcode))

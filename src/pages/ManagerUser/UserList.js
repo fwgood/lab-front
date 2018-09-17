@@ -35,12 +35,13 @@ const getValue = obj =>
 const statusMap = ['default', 'processing', 'success', 'error'];
 const status = ['管家', '教主', '学生'];
 
-@connect(({ rule, loading }) => ({
+@connect(({ rule, loading, userlist }) => ({
   rule,
-  loading: loading.models.rule,
+  userlist,
+  loading: loading.models.userlist,
 }))
 @Form.create()
-class TableList extends PureComponent {
+class TableList extends React.Component {
   state = {
     modalVisible: false,
     updateModalVisible: false,
@@ -50,21 +51,45 @@ class TableList extends PureComponent {
     selectedRows: [],
     formValues: {},
     stepFormValues: {},
-    currentAuth:'2',
+    currentAuth: '2',
+    status: '-1',
+    search: '',
+    currentUser:{}
   };
 
+  componentWillMount() {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'userlist/queryList',
+      payload: {
+        page: 0,
+        pageSize: 0,
+        sort: 'asc',
+      },
+    });
+  }
+
+  getData = () =>
+    this.props.userlist.users.filter(e => {
+
+      if (this.state.status == -1) {
+        return e.userName.match(new RegExp(this.state.search));
+      } 
+        return e.userRole == this.state.status && e.userName.match(new RegExp(this.state.search));
+      
+    });
   columns = [
     {
       title: '账号',
-      dataIndex: 'name',
+      dataIndex: 'userName',
     },
     {
-      title: '名字',
-      dataIndex: 'desc',
+      title: '昵称',
+      dataIndex: 'userNickname',
     },
     {
       title: '权限',
-      dataIndex: 'status',
+      dataIndex: 'userRole',
       filters: [
         {
           text: status[0],
@@ -88,13 +113,11 @@ class TableList extends PureComponent {
       render: (text, record) => (
         <Fragment>
           <a
-            onClick={(record) => {
-              this.setState({ updateAuthVisible: !this.state.updateAuthVisible });
-            }}
+            onClick={()=>this.md(record)}
           >
             修改
           </a>
-          ,<Divider type="vertical" />
+          <Divider type="vertical" />
           <Popconfirm
             title="此操作不可逆！"
             onConfirm={() => this.confirm(record)}
@@ -108,13 +131,24 @@ class TableList extends PureComponent {
       ),
     },
   ];
-  confirm = record => {
-    console.log(record);
-    message.success('删除成功');
-  };
 
+  confirm = record => {
+    console.log(record)
+    this.props.dispatch({
+      type:'userlist/delUser',
+      payload:{
+        userId:record.userId
+      }
+    })
+  };
+  md = record => {
+      console.log(record)
+      this.setState({ updateAuthVisible:true });
+      this.setState({
+        currentUser:record
+      })
+  };
   cancel = e => {
-    console.log(e);
     message.error('Click on No');
   };
 
@@ -124,58 +158,67 @@ class TableList extends PureComponent {
       type: 'rule/fetch',
     });
   }
-  handleChange=(value)=> {
-    console.log(`selected ${value}`);
+
+  handleChange = value => {
     this.setState({
-        currentAuth:value,
-    })
-  }
-  
-  handleBlur=()=> {
-    console.log('blur');
-  }
-  
-  handleFocus=()=> {
-    console.log('focus');
-  }
-  confirmAuth=()=>{
-      console.log("当前选择权限，"+this.state.currentAuth)
-  }
-  renderUpdateAuth = () => {
-    return (
-      <div>
-        <Modal
-          title="修改权限"
-          style={{textAlign:"center",width:300}}
-          visible={this.state.updateAuthVisible}
-          onOk={() => 
-            this.confirmAuth()}
-          onCancel={() => {
-            this.setState({ updateAuthVisible: !this.state.updateAuthVisible });
-          }}
-        >
-          <Select
-            showSearch
-            style={{ width: 300}}
-            placeholder="选择权限"
-            optionFilterProp="children"
-            onChange={this.handleChange}
-            onFocus={this.handleFocus}
-            onBlur={this.handleBlur}
-            defaultValue="0"
-            filterOption={(input, option) =>
-              option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-          >
-            <Select.Option value="0">管家</Select.Option>
-            <Select.Option value="1">教主</Select.Option>
-            <Select.Option value="2">学生</Select.Option>
-          </Select>
-          ,
-        </Modal>
-      </div>
-    );
+      currentAuth: value,
+    });
   };
+
+  handleBlur = () => {
+    console.log('blur');
+  };
+
+  handleFocus = () => {
+    console.log('focus');
+  };
+
+  confirmAuth = () => {
+    console.log(`当前选择权限，${this.state.currentAuth}`);
+    this.setState({
+      updateAuthVisible:false
+    })
+    this.props.dispatch({
+      type:'userlist/modifyUser',
+      payload:{
+        role:this.state.currentAuth,
+        userId :this.state.currentUser.userId
+      }
+    })
+  };
+
+  renderUpdateAuth = () => (
+    <div>
+      <Modal
+        title="修改权限"
+        style={{ textAlign: 'center', width: 300 }}
+        visible={this.state.updateAuthVisible}
+        onOk={() => this.confirmAuth()}
+        onCancel={() => {
+          this.setState({ updateAuthVisible: !this.state.updateAuthVisible });
+        }}
+      >
+        <Select
+          showSearch
+          style={{ width: 300 }}
+          placeholder="选择权限"
+          optionFilterProp="children"
+          onChange={this.handleChange}
+          onFocus={this.handleFocus}
+          onBlur={this.handleBlur}
+          defaultValue="0"
+          filterOption={(input, option) =>
+            option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+          }
+        >
+          <Select.Option value={"0"}>管家</Select.Option>
+          <Select.Option value={"1"}>教主</Select.Option>
+          <Select.Option value={"2"}>学生</Select.Option>
+        </Select>
+        ,
+      </Modal>
+    </div>
+  );
 
   handleStandardTableChange = (pagination, filtersArg, sorter) => {
     const { dispatch } = this.props;
@@ -213,6 +256,10 @@ class TableList extends PureComponent {
       type: 'rule/fetch',
       payload: {},
     });
+    this.setState({
+      status:'-1',
+      search:""
+    })
   };
 
   handleMenuClick = e => {
@@ -259,7 +306,8 @@ class TableList extends PureComponent {
       };
 
       this.setState({
-        formValues: values,
+        status: values.status,
+        search: values.name,
       });
 
       dispatch({
@@ -364,7 +412,7 @@ class TableList extends PureComponent {
       handleUpdate: this.handleUpdate,
     };
     return (
-      <PageHeaderWrapper title="查询表格">
+      <PageHeaderWrapper title="用户管理">
         <Card bordered={false}>
           <div className={styles.tableList}>
             <div className={styles.tableListForm}>{this.renderSimpleForm()}</div>
@@ -382,7 +430,9 @@ class TableList extends PureComponent {
             <StandardTable
               selectedRows={selectedRows}
               loading={loading}
-              data={data}
+              data={{
+                list: this.getData(),
+              }}
               columns={this.columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
