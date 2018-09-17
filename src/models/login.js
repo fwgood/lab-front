@@ -34,7 +34,7 @@ export default {
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
-        if (redirect.match(/login/)) {
+        if (redirect && redirect.match(/login/)) {
           yield put(routerRedux.replace('/'));
           return;
         }

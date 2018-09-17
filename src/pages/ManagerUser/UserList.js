@@ -72,10 +72,10 @@ class TableList extends React.Component {
   getData = () =>
     this.props.userlist.users.filter(e => {
 
-      if (this.state.status == -1) {
+      if (this.state.status == -1&& e.userName.match(new RegExp(this.state.search))) {
         return e.userName.match(new RegExp(this.state.search));
       } 
-        return e.userRole == this.state.status && e.userName.match(new RegExp(this.state.search));
+        return e.userRole == this.state.status || e.userName.match(new RegExp(this.state.search));
       
     });
   columns = [
@@ -371,7 +371,7 @@ class TableList extends React.Component {
             </FormItem>
           </Col>
           <Col md={8} sm={24}>
-            <FormItem label="使用状态">
+            <FormItem label="权限">
               {getFieldDecorator('status')(
                 <Select placeholder="请选择" style={{ width: '100%' }}>
                   <Option value="0">管家</Option>

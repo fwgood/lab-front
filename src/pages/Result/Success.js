@@ -50,12 +50,11 @@ const extra = (
     >
       <FormattedMessage id="app.result.success.operate-title" defaultMessage="Project Name" />
     </div>
-    <Row style={{ marginBottom: 16 }}>
+    {/* <Row style={{ marginBottom: 16 }}>
       <Col xs={24} sm={12} md={12} lg={12} xl={6}>
         <span style={{ color: 'rgba(0, 0, 0, 0.85)' }}>
           <FormattedMessage id="app.result.success.operate-id" defaultMessage="Project ID：" />
         </span>
-        23421
       </Col>
       <Col xs={24} sm={12} md={12} lg={12} xl={6}>
         <span style={{ color: 'rgba(0, 0, 0, 0.85)' }}>
@@ -72,8 +71,8 @@ const extra = (
         </span>
         2016-12-12 ~ 2017-12-12
       </Col>
-    </Row>
-    <Steps style={{ marginLeft: -42, width: 'calc(100% + 84px)' }} progressDot current={1}>
+    </Row> */}
+    {/* <Steps style={{ marginLeft: -42, width: 'calc(100% + 84px)' }} progressDot current={1}>
       <Step
         title={
           <span style={{ fontSize: 14 }}>
@@ -110,20 +109,19 @@ const extra = (
           </span>
         }
       />
-    </Steps>
+    </Steps> */}
   </Fragment>
 );
 
 const actions = (
   <Fragment>
-    <Button type="primary">
+    <Button
+      type="primary"
+      onClick={() => {
+        this.props.history.replace('/form');
+      }}
+    >
       <FormattedMessage id="app.result.success.btn-return" defaultMessage="Back to list" />
-    </Button>
-    <Button>
-      <FormattedMessage id="app.result.success.btn-project" defaultMessage="View project" />
-    </Button>
-    <Button>
-      <FormattedMessage id="app.result.success.btn-print" defaultMessage="Print" />
     </Button>
   </Fragment>
 );
@@ -141,7 +139,7 @@ export default class Success extends React.PureComponent {
             type="success"
             title={this.props.location.state.title}
             description={this.props.location.state.description}
-            extra={extra}
+            // extra={extra}
             actions={actions}
             style={{ marginTop: 48, marginBottom: 16 }}
           />
