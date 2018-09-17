@@ -41,7 +41,7 @@ class Center extends PureComponent {
       like: 33,
       star: 99,
       content:
-        '少林寺觉远禅师看护《楞伽经》不力，导致经书被尹克西和潇湘子盗走。潇湘子和尹克西互相猜忌残杀，临终之前幡然醒悟，委托何足道向觉远转达经书的下落。何足道接受委托，并向少林寺发出挑战。适逢郭靖、黄蓉的女儿郭襄前往少林寺寻找杨过，从罗汉掌首座无色禅师处得知何足道挑战少林武功的消息，遂在约定日子只身前往观战。觉远禅师的弟子张君宝在与何足道一战之中暴露了偷学武功的事实，犯了寺规，受到少林寺众僧的围攻。于是觉远携张君宝、郭襄突出重围，却在途中圆寂。张君宝与郭襄分手之后，只身前往武当山修学觉远生前传授的几阳真经，并深得道家冲虚圆通之功的精髓，加以融会贯通，创出了武当一派武功，遂自号三丰。',
+        '少林寺觉远禅师看护《楞伽经》不力，导致经书被尹克西和潇湘子盗走。潇湘子和尹克西互相猜忌残杀，临终之前幡然醒悟，委托何足道向觉远转达经书的下落。何足道接受委托，并向少林寺发出挑战。适逢郭靖、黄蓉的女儿郭襄前往少林寺寻找杨过，从罗汉掌首座无色禅师处得知何足道挑战少林武功的消息，遂在约定日子只身前往观战。觉远禅师的弟子张君宝在与何足道一战之中暴露了偷学武功的事实，犯了寺规，受到少林寺众僧的围攻。于是觉远携张君宝、郭襄突出重围，却在途中圆寂。张君宝与郭襄分手之后，只身前往武当山修学觉远生前传授的九阳真经，并深得道家冲虚圆通之功的精髓，加以融会贯通，创出了武当一派武功，遂自号三丰。',
       messages: [
         {
           id: 20151120222,
@@ -111,10 +111,10 @@ class Center extends PureComponent {
   };
 
   replay = item => {
-    this.setState({
-      commentOrReply: true,
-      currentOperation: `回复${item.name.last}`,
-    });
+    // this.setState({
+    //   commentOrReply: true,
+    //   currentOperation: `回复${item.name.last}`,
+    // });
     console.log(this.state.currentOperation);
   };
 
@@ -137,9 +137,9 @@ class Center extends PureComponent {
         renderItem={item => (
           <List.Item
             actions={[
-              <a onClick={() => this.replay(item)} href="#replay">
-                回复
-              </a>,
+              // <a onClick={() => console.log("回复")} href="#replay">
+              //   回复
+              // </a>,
             ]}
             // extra={
             //   <div className={styles.subComment}>

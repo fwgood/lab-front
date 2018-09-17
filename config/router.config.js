@@ -78,6 +78,13 @@ export default [
         ],
       },
       {
+        path: '/manage-user',
+        name: 'managerUser',
+        icon:'team',
+        component: './ManagerUser/UserList',
+        authority: ['0','1'],
+      },
+      {
         path: '/course',
         name: 'course',
         hideInMenu: true,
