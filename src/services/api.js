@@ -1,5 +1,6 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
+import Axios from 'axios';
 
 export async function queryProjectNotice() {
   return request('/api/project/notice');
@@ -122,10 +123,6 @@ export async function fakeRegister(params) {
   });
 }
 
-export async function queryNotices() {
-  return request('/api/notices');
-}
-
 export async function getFakeCaptcha(mobile) {
   return request(`/api/captcha?mobile=${mobile}`);
 }
@@ -144,7 +141,8 @@ export async function queryAllCourse() {
 }
 export async function queryMyCourse() {
   return request('http://lab.lli.fun/api/v1/course/courseList', {
-    method: 'GET',
+    method: 'POST',
+    body: {},
   });
 }
 export async function changeCourseState({ courseId, courseState }) {
@@ -182,4 +180,125 @@ export async function quit(params) {
   return request(`http://lab.lli.fun/lab/api/v1/course/dropCourse?courseId=${params.courseId}`, {
     method: 'POST',
   });
+}
+export async function addNotice(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/anno/publishAnno`, {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function queryNotice(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/anno/annoList`, {
+    method: 'GET',
+  });
+}
+export async function addLab(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/lab/addLab`, {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function queryLab(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/lab/labList?courseId=${params.courseId}`, {
+    method: 'POST',
+  });
+}
+
+export async function queryMyLab(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/lab/labScoreList?courseId=${params.courseId}`, {
+    method: 'GET',
+  });
+}
+export async function queryScore(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/lab/scoreList?labId=${params.labId}`, {
+    method: 'POST',
+    body: {},
+  });
+}
+export async function addBlog(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/blog/publishBlog`, {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function queryBlog(params) {
+  console.log(params);
+  return request(`http://lab.lli.fun/lab/api/v1/blog/blogList?courseId=${params.courseId}`, {
+    method: 'POST',
+    body: {
+      page: params.page,
+      pageSize: params.pageSize,
+      sort: 'asc',
+    },
+  });
+}
+export async function queryMyBlog(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/blog/userBlogList`, {
+    method: 'POST',
+    body: {
+      page: params.page,
+      pageSize: params.pageSize,
+      sort: 'asc',
+    },
+  });
+}
+export async function searchBlog(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/blog/searchBlog?param=${params.param}`, {
+    method: 'POST',
+    body: {
+      page: params.page,
+      pageSize: params.pageSize,
+      sort: 'asc',
+    },
+  });
+}
+export async function addCommit(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/lab/labCommit`, {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function addScore(params) {
+  return request(
+    `http://lab.lli.fun/lab/api/v1/lab/addLabScore?labId=${params.labId}&score=${
+      params.score
+    }&userId=${params.userId}`,
+    {
+      method: 'POST',
+    }
+  );
+}
+export async function addComment(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/blog/publishComment`, {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function getComment(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/blog/getComments?parentId=${params.parentId}`, {
+    method: 'POST',
+  });
+}
+export async function register(params) {
+  console.log(params);
+  return Axios.post(`http://lab.lli.fun/lab/api/v1/user/regist`, params);
+}
+export async function queryUsers(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/user/getAllUser`, {
+    method: 'POST',
+    body: params,
+  });
+}
+export async function delUser(params) {
+  return request(`http://lab.lli.fun/lab/api/v1/user/deleteUser?userId=${params.userId}`, {
+    method: 'GET',
+  });
+}
+export async function modifyUser(params) {
+  return request(
+    `http://lab.lli.fun/lab/api/v1/user/updateState?role=${params.role}&userId=${params.userId}`,
+    {
+      method: 'GET',
+    }
+  );
 }

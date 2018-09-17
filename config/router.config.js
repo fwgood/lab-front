@@ -6,6 +6,7 @@ export default [
     routes: [
       { path: '/user', redirect: '/user/login' },
       { path: '/user/login', component: './User/Login' },
+      { path: '/user/register', component: './User/Register' },
     ],
   },
   // app
@@ -30,55 +31,58 @@ export default [
         path: '/form',
         icon: 'form',
         name: 'form',
-        routes: [
-          {
-            path: '/form/test-form',
-            name: 'testform',
-            component: './Forms/BasicForm',
-          },
-          {
-            path: '/form/basic-form',
-            name: 'basicform',
-            component: './Term/CurrentTerm',
-          },
-          {
-            path: '/form/step-form',
-            name: 'stepform',
-            component: './Forms/StepForm',
-          },
-          {
-            path: '/form/advanced-form',
-            name: 'advancedform',
-            component: './Forms/AdvancedForm',
-          },
-          {
-            path: '/form/add-course',
-            name: 'addCourse',
-            component: './Forms/AddCourse',
-          },
-        ],
+        component: './Term/CurrentTerm',
+        authority: ['1', '2'],
+        // routes: [
+        //   {
+        //     path: '/form/basic-form',
+        //     name: 'basicform',
+        //     component: './Term/CurrentTerm',
+        //   },
+        //   {
+        //     path: '/form/step-form',
+        //     name: 'stepform',
+        //     component: './Forms/StepForm',
+        //   },
+        //   {
+        //     path: '/form/advanced-form',
+        //     name: 'advancedform',
+        //     component: './Forms/AdvancedForm',
+        //   },
+        //   {
+        //     path: '/form/add-course',
+        //     name: 'addCourse',
+        //     component: './Forms/AddCourse',
+        //   },
+        // ],
       },
       {
         path: '/manage-course',
         name: 'manage-course',
         icon: 'form',
+        authority: ['1', '0'],
         routes: [
           {
             path: '/manage-course/add-course',
             name: 'addCourse',
             component: './Course/AddCourse',
+            authority: ['1'],
           },
-          {
-            path: '/manage-course/my-class',
-            name: 'myClass',
-            component: './Term/CurrentTerm',
-          },
+
           {
             path: '/manage-course/manage-course',
             name: 'manageCourse',
             component: './Course/ManageCourse',
+            authority: ['0'],
           },
         ],
+      },
+      {
+        path: '/manage-user',
+        name: 'managerUser',
+        icon:'team',
+        component: './ManagerUser/UserList',
+        authority: ['0','1'],
       },
       {
         path: '/course',
@@ -95,15 +99,22 @@ export default [
             name: 'grade',
             hideInMenu: true,
             component: './Grade/Grade',
-
-          }
-        ]
+          },
+        ],
+      },
+      {
+        path: '/compiler',
+        name: 'compiler',
+        icon: 'forward',
+        // hideInMenu: true,
+        component: './Compiler/Compiler',
       },
       // list
       {
         path: '/list',
         icon: 'table',
         name: 'list',
+        hideInMenu: true,
         routes: [
           {
             path: '/list/table-list',
@@ -152,6 +163,7 @@ export default [
         path: '/profile',
         name: 'profile',
         icon: 'profile',
+        hideInMenu: true,
         routes: [
           // profile
           {
@@ -170,6 +182,7 @@ export default [
         name: 'result',
         icon: 'check-circle-o',
         path: '/result',
+        hideInMenu: true,
         routes: [
           // result
           {
@@ -184,6 +197,7 @@ export default [
         name: 'exception',
         icon: 'warning',
         path: '/exception',
+        hideInMenu: true,
         routes: [
           // exception
           {
@@ -238,31 +252,15 @@ export default [
             ],
           },
           {
-            path: '/account/settings',
-            name: 'settings',
-            component: './Account/Settings/Info',
-            routes: [
-              {
-                path: '/account/settings',
-                redirect: '/account/settings/base',
-              },
-              {
-                path: '/account/settings/base',
-                component: './Account/Settings/BaseView',
-              },
-              {
-                path: '/account/settings/security',
-                component: './Account/Settings/SecurityView',
-              },
-              {
-                path: '/account/settings/binding',
-                component: './Account/Settings/BindingView',
-              },
-              {
-                path: '/account/settings/notification',
-                component: './Account/Settings/NotificationView',
-              },
-            ],
+            path: '/account/discuss',
+            name: 'discuss',
+            component: './Discuss/Discuss',
+          },
+          {
+            path: '/account/discuss/detail',
+            name: 'detail',
+            hideInMenu: true,
+            component: './Discuss/DiscussDetail',
           },
         ],
       },

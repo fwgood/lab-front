@@ -32,7 +32,7 @@ const checkStatus = response => {
       message: `错误`,
       description: '账号或密码错误',
     });
-    return
+    return;
   }
   notification.error({
     message: `请求错误 ${response.status}: ${response.url}`,
@@ -76,6 +76,7 @@ export default function request(
     expirys: isAntdPro(),
   }
 ) {
+  console.log(url);
   /**
    * Produce fingerprints based on url and parameters
    * Maybe url has the same parameters
@@ -138,10 +139,10 @@ export default function request(
   //     sessionStorage.removeItem(`${hashcode}:timestamp`);
   //   }
   // }
-  const baseUrl = 'http://lab.lli.fun';
-  if (process.env.NODE_ENV == 'production') {
-    url = baseUrl + url;
-  }
+  // const baseUrl = 'http://lab.lli.fun';
+  // if (process.env.NODE_ENV == 'production') {
+  //   url = baseUrl + url;
+  // }
   return fetch(url, newOptions)
     .then(checkStatus)
     .then(response => cachedSave(response, hashcode))

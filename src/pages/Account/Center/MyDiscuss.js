@@ -5,14 +5,13 @@ import { connect } from 'dva';
 import stylesArticles from '../../List/Articles.less';
 import styles from './Articles.less';
 
-@connect(({ list, blog }) => ({
+@connect(({ list }) => ({
   list,
-  blog,
 }))
 class Center extends PureComponent {
   render() {
     const {
-      blog: { blogs },
+      list: { list },
     } = this.props;
     const IconText = ({ type, text }) => (
       <span>
@@ -22,7 +21,7 @@ class Center extends PureComponent {
     );
     const ListContent = ({ data: { content, updatedAt, avatar, owner, href } }) => (
       <div className={stylesArticles.listContent}>
-        <div className={stylesArticles.description}>{content}</div>
+        <div className={stylesArticles.description}>kaishi</div>
         <div className={stylesArticles.extra}>
           <Avatar src={avatar} size="small" />
           <a href={href}>{owner}</a> 发布在
@@ -37,7 +36,7 @@ class Center extends PureComponent {
         className={styles.articleList}
         rowKey="id"
         itemLayout="vertical"
-        dataSource={blogs}
+        dataSource={list}
         renderItem={item => (
           <List.Item
             key={item.id}
@@ -51,13 +50,13 @@ class Center extends PureComponent {
               title={
                 <a className={stylesArticles.listItemMetaTitle} href={item.href}>
                   {item.title}
-                </a>
-              }
+                  </a>
+                }
               description={
                 <span>
-                  <Tag>Ant Design</Tag>
-                  <Tag>设计语言</Tag>
-                  <Tag>蚂蚁金服</Tag>
+                  <Tag>machine learning</Tag>
+                  <Tag>julia</Tag>
+                  <Tag>班级2</Tag>
                 </span>
               }
             />

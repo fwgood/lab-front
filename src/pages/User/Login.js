@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Checkbox, Alert, Icon } from 'antd';
+import { Checkbox, Alert, notification } from 'antd';
 import Login from '@/components/Login';
+import { message } from 'antd';
+import Link from 'umi/link';
 import styles from './Login.less';
 
 const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
@@ -47,10 +49,12 @@ class LoginPage extends Component {
   }
 
   handleSubmit = (err, values) => {
+    clearTimeout(this.timer);
     this.timer = setTimeout(() => {
       this.setState({
         isFailed: true,
       });
+      message.warning('此次登陆似乎耗时过多，请检查网络环境或重试');
     }, 2000);
     const { type } = this.state;
     if (!err) {
@@ -105,11 +109,25 @@ class LoginPage extends Component {
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
               自动登录
             </Checkbox>
-            <a style={{ float: 'right' }} href="">
+            <a
+              style={{ float: 'right' }}
+              onClick={() => {
+                notification.info({
+                  message: '注意',
+                  description: '请尽快联系管理员',
+                });
+              }}
+            >
               忘记密码
             </a>
           </div>
+
           <Submit loading={!this.state.isFailed && submitting}>登录</Submit>
+          <div className={styles.other}>
+            <Link className={styles.register} to="/User/Register">
+              注册账户
+            </Link>
+          </div>
         </Login>
       </div>
     );

@@ -8,16 +8,21 @@ import {
   Modal,
   Input,
   Form,
+  AutoComplete,
+  message,
+  Select,
+  Popconfirm,
   Popover,
   Table,
 } from 'antd';
+import moment from 'moment';
 import Ellipsis from '@/components/Ellipsis';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import debounce from 'lodash/debounce';
+import { Avatar } from 'antd';
 import styles from './CurrentTerm.less';
 import icon2 from '../../assets/icon2.jpg';
 import { getAuth } from '@/utils/auth';
-import { Avatar } from 'antd';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -46,6 +51,7 @@ class CardList extends PureComponent {
     current: {},
     pass: '',
     passVisible: 0,
+    inputValue:''
   };
 
   componentWillMount() {
@@ -57,15 +63,10 @@ class CardList extends PureComponent {
   }
 
   chekDetail = (flag, item) => {
-    console.log(item)
-    this.props.history.push("/course/detail",item)
-  }
-  handleSelect = (a, b) => {
-    // this.setState({
-    //   current: a,
-    // });
-    console.log(a);
+    console.log(item);
+    this.props.history.push('/course/detail', item);
   };
+
 
   addOperate = () => {
     if (getAuth().role == '1') {
@@ -108,8 +109,8 @@ class CardList extends PureComponent {
 
   quitOrInfo = item => {
     this.setState({
-      currentCourse:item
-    })
+      currentCourse: item,
+    });
     if (getAuth().role == 2) {
       console.log('退选');
 
@@ -128,8 +129,23 @@ class CardList extends PureComponent {
 
   executeInfo = () => {
     // 执行发送通知
-    this.setState({
-      courseInfoVisible: false,
+    const { form } = this.props;
+    form.validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        const { dispatch } = this.props;
+        dispatch({
+          type: 'notice/addNotice',
+          payload: {
+            ...values,
+            announncementCourseId: this.state.currentCourse.courseId,
+            announncementType: 'string',
+            announncementTime: moment(new Date()).format('YYYY-MM-D H-m'),
+          },
+        });
+        this.setState({
+          courseInfoVisible: false,
+        });
+      }
     });
   };
 
@@ -140,10 +156,10 @@ class CardList extends PureComponent {
   };
 
   handleAdd = record => () => {
-    console.log(record)
+    console.log(record);
     this.setState({
       current: record,
-      passVisible: record.courseId
+      passVisible: record.courseId,
     });
   };
 
@@ -208,20 +224,18 @@ class CardList extends PureComponent {
       >
         <Form onSubmit={this.handleSubmit}>
           <FormItem {...formItemLayout} label="标题">
-            {getFieldDecorator('title', {
+            {getFieldDecorator('announncementTitle', {
               rules: [
                 {
-                  type: 'email',
                   message: '请输入标题',
                 },
               ],
             })(<Input />)}
           </FormItem>
           <FormItem {...formItemLayout} label="公告内容">
-            {getFieldDecorator('content', {
+            {getFieldDecorator('announncementContent', {
               rules: [
                 {
-                  type: 'email',
                   message: '请输入内容',
                 },
               ],
@@ -240,7 +254,7 @@ class CardList extends PureComponent {
 
     const teaInfo = {
       title: '我的班级',
-      courseOPerate: '开设班级',
+      courseOPerate: '开设课程',
       courseInfo: '',
     };
     const stuInfo = {
@@ -248,15 +262,6 @@ class CardList extends PureComponent {
       courseOPerate: '添加课程',
       courseInfo: '',
     };
-
-    const content = (
-      <div>
-        <Input style={{ width: 120 }} onChange={this.handlePassChange} />
-        <Button type="ghost" onClick={this.handlePass}>
-          添加
-        </Button>
-      </div>
-    );
 
     const extraContent = (
       <div className={styles.extraImg}>
@@ -289,7 +294,16 @@ class CardList extends PureComponent {
         key: 'action',
         render: (text, record) => (
           <span>
-            <Popover content={content} title="请输入选课密码" visible={this.state.passVisible==record.courseId}>
+            <Popover
+              content={
+                <div>
+                  <Input value={this.state.pass} onChange={this.handlePassChange} style={{width:120}}/>
+                  <Button onClick={this.handlePass}>选课</Button>
+                </div>
+              }
+              title="请输入选课密码"
+              visible={this.state.passVisible == record.courseId}
+            >
               <Button onClick={this.handleAdd(record)}>选课</Button>
             </Popover>
           </span>
@@ -299,8 +313,8 @@ class CardList extends PureComponent {
     return (
       <PageHeaderWrapper
         title={getAuth().role == '2' ? stuInfo.title : teaInfo.title}
-        content={content}
         extraContent={extraContent}
+        content={<div />}
       >
         <div className={styles.cardList}>
           <Modal
@@ -309,7 +323,7 @@ class CardList extends PureComponent {
             footer={null}
             onCancel={this.handleCancel}
           >
-            <Table dataSource={this.props.course.course} columns={columns} loading={loading} />
+            <Table dataSource={this.props.course.course} columns={columns} loading={loading} rowKey='courseId'/>
           </Modal>
 
           <div>{this.renderQuitDialog()}</div>

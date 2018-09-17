@@ -5,22 +5,36 @@ import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import NoticeIcon from '../NoticeIcon';
 import styles from './index.less';
-
+import { connect } from 'dva';
+@connect(({ login, loading, notice }) => ({
+  login,
+  notice,
+  loading: loading.models.notice,
+}))
 export default class GlobalHeaderRight extends PureComponent {
   getNoticeData() {
-    const { notices = [] } = this.props;
+    const {
+      notice: { notices },
+    } = this.props;
     if (notices.length === 0) {
       return {};
     }
     const newNotices = notices.map(notice => {
       const newNotice = { ...notice };
-      if (newNotice.datetime) {
-        newNotice.datetime = moment(notice.datetime).fromNow();
+      if (newNotice.announncementTime) {
+        newNotice.datetime = moment(notice.announncementTime).fromNow();
       }
-      if (newNotice.id) {
-        newNotice.key = newNotice.id;
+      if (newNotice.announncementTitle) {
+        newNotice.title = newNotice.announncementTitle;
       }
-      if (newNotice.extra && newNotice.status) {
+      if (newNotice.announncementId) {
+        newNotice.key = newNotice.announncementId;
+      }
+      if (newNotice.announncementContent) {
+        newNotice.description = newNotice.announncementContent;
+      }
+      newNotice.avatar = <Avatar>{newNotice.announncementTitle[0]}</Avatar>;
+      if (newNotice.announncementContent && newNotice.status) {
         const color = {
           todo: '',
           processing: 'blue',
@@ -29,13 +43,13 @@ export default class GlobalHeaderRight extends PureComponent {
         }[newNotice.status];
         newNotice.extra = (
           <Tag color={color} style={{ marginRight: 0 }}>
-            {newNotice.extra}
+            {newNotice.announncementContent}
           </Tag>
         );
       }
       return newNotice;
     });
-    return groupBy(newNotices, 'type');
+    return groupBy(newNotices, 'announncementType');
   }
 
   changLang = () => {
@@ -50,7 +64,7 @@ export default class GlobalHeaderRight extends PureComponent {
   render() {
     const {
       currentUser,
-      fetchingNotices,
+      queryNotice,
       onNoticeVisibleChange,
       onMenuClick,
       onNoticeClear,
@@ -62,10 +76,10 @@ export default class GlobalHeaderRight extends PureComponent {
           <Icon type="user" />
           <FormattedMessage id="menu.account.center" defaultMessage="account center" />
         </Menu.Item>
-        <Menu.Item key="userinfo">
+        {/* <Menu.Item key="userinfo">
           <Icon type="setting" />
           <FormattedMessage id="menu.account.settings" defaultMessage="account settings" />
-        </Menu.Item>
+        </Menu.Item> */}
         <Menu.Item key="triggerError">
           <Icon type="close-circle" />
           <FormattedMessage id="menu.account.trigger" defaultMessage="Trigger Error" />
@@ -92,20 +106,14 @@ export default class GlobalHeaderRight extends PureComponent {
           }}
           onClear={onNoticeClear}
           onPopupVisibleChange={onNoticeVisibleChange}
-          loading={fetchingNotices}
+          loading={queryNotice}
           popupAlign={{ offset: [20, -16] }}
         >
           <NoticeIcon.Tab
-            list={noticeData['通知']}
+            list={noticeData['string']}
             title="通知"
             emptyText="你已查看所有通知"
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
-          />
-          <NoticeIcon.Tab
-            list={noticeData['消息']}
-            title="消息"
-            emptyText="您已读完所有消息"
-            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/sAuJeJzSKbUmHfBQRzmZ.svg"
           />
         </NoticeIcon>
         {currentUser.userName ? (
