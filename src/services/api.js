@@ -1,7 +1,24 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
 import Axios from 'axios';
+import { message } from 'antd';
 
+const axios = Axios.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+          message.error('密码错误');
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+          break;
+      }
+    }
+    return Promise.reject(error.response.data);
+  }
+);
 export async function queryProjectNotice() {
   return request('/api/project/notice');
 }
@@ -103,11 +120,15 @@ export async function updateFakeList(params) {
     },
   });
 }
+// export async function login(params) {
+//   return request('http://lab.lli.fun/api/v1/user/login', {
+//     method: 'POST',
+//     body: params,
+//   });
+// }
 export async function login(params) {
-  return request('http://lab.lli.fun/api/v1/user/login', {
-    method: 'POST',
-    body: params,
-  });
+  console.log(134);
+  return Axios.post('http://lab.lli.fun/api/v1/user/login', params);
 }
 export async function fakeAccountLogin(params) {
   return request('/api/login/account', {
