@@ -55,8 +55,10 @@ class LoginPage extends Component {
         isFailed: true,
       });
       message.warning('此次登陆似乎耗时过多，请检查网络环境或重试');
-    }, 2000);
+    }, 5000);
+    console.log(123);
     const { type } = this.state;
+    console.log(type);
     if (!err) {
       const { dispatch } = this.props;
       dispatch({

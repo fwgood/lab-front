@@ -179,7 +179,7 @@ class SearchList extends Component {
             enterButton="搜索"
             size="large"
             onSearch={value => this.searchDiscuss(value)}
-            style={{ width: 522 }}
+            style={{ width: 200 }}
           />
         </Input.Group>
       </div>

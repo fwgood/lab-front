@@ -3,6 +3,7 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import { Button, Row, Col, Icon, Steps, Card } from 'antd';
 import Result from '@/components/Result';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import router from 'umi/router';
 
 const { Step } = Steps;
 
@@ -115,12 +116,7 @@ const extra = (
 
 const actions = (
   <Fragment>
-    <Button
-      type="primary"
-      onClick={() => {
-        this.props.history.replace('/form');
-      }}
-    >
+    <Button type="primary" onClick={router.replace('/form')}>
       <FormattedMessage id="app.result.success.btn-return" defaultMessage="Back to list" />
     </Button>
   </Fragment>

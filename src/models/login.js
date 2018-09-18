@@ -16,10 +16,9 @@ export default {
 
   effects: {
     *login({ payload }, { call, put }) {
-      const response = yield call(login, payload);
-      if (!response) {
-        return;
-      }
+      const re = yield call(login, payload);
+      const response = re.data;
+      console.log(123);
       reloadAuthorized();
       // Login successfully
       if (response.code === 200) {
@@ -31,6 +30,7 @@ export default {
             token: response.token,
           },
         });
+
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
@@ -38,6 +38,7 @@ export default {
           yield put(routerRedux.replace('/'));
           return;
         }
+        window.location.reload();
         if (redirect) {
           const redirectUrlParams = new URL(redirect);
           if (redirectUrlParams.origin === urlParams.origin) {
