@@ -18,9 +18,25 @@ const pageSize = 5;
 }))
 class SearchList extends Component {
   state = {
+    newTags: [
+      {
+        key: '0',
+        label: '很有想法的',
+      },
+      {
+        key: '1',
+        label: '专注设计',
+      },
+      {
+        key: '2',
+        label: '辣~',
+      },
+    ],
     editPanelVisible: false,
     mdeValue: '',
     title: '',
+    inputVisible: false,
+    inputValue: '',
   };
 
   componentDidMount() {
@@ -72,7 +88,29 @@ class SearchList extends Component {
       title: e.target.value,
     });
   };
-
+    handleInputChange = e => {
+    this.setState({ inputValue: e.target.value });
+  };
+  handleInputConfirm = () => {
+    const { state } = this;
+    const { inputValue } = state;
+    let { newTags } = state;
+    if (inputValue && newTags.filter(tag => tag.label === inputValue).length === 0) {
+      newTags = [...newTags, { key: `new-${newTags.length}`, label: inputValue }];
+    }
+    this.setState({
+      newTags,
+      inputVisible: false,
+      inputValue: '',
+    });
+  };
+  showInput = () => {
+    this.setState({ inputVisible: true }, () => this.input.focus());
+  };
+  saveInputRef = input => {
+    this.input = input;
+    console.log(this.state.newTags)
+  };
   renderMarkDown = () => (
     <div>
       <Card
@@ -86,6 +124,33 @@ class SearchList extends Component {
           onChange={this.handleTitleChange}
         />
 
+        <div className={styles.tags}>
+                    <span className={styles.tagsTitle} style={{margin:10}}>标签</span>
+                    {this.state.newTags.map(item => (
+                      <Tag key={item.key}>{item.label}</Tag>
+                    ))}
+                    {this.state.inputVisible && (
+                      <Input
+                        ref={this.saveInputRef}
+                        type="text"
+                        size="small"
+                        style={{ width: 78 }}
+                        value={this.state.inputValue}
+                        onChange={this.handleInputChange}
+                        onBlur={this.handleInputConfirm}
+                        onPressEnter={this.handleInputConfirm}
+                      />
+                    )}
+                    {!this.state.inputVisible && (
+                      <Tag
+                        onClick={this.showInput}
+                        style={{ background: '#fff', borderStyle: 'dashed' }}
+                      >
+                        <Icon type="plus" />
+                      </Tag>
+                    )}
+                  </div>
+        
         <div style={{ marginTop: 10 }}>
           <SimpleMDE onChange={this.handleChange} />
           {/* <SimpleMDE

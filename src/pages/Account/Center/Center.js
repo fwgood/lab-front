@@ -101,6 +101,28 @@ class Center extends PureComponent {
       />
     );
   }
+  saveInputRef = input => {
+    this.input = input;
+  };
+  handleInputChange = e => {
+    this.setState({ inputValue: e.target.value });
+  };
+  handleInputConfirm = () => {
+    const { state } = this;
+    const { inputValue } = state;
+    let { newTags } = state;
+    if (inputValue && newTags.filter(tag => tag.label === inputValue).length === 0) {
+      newTags = [...newTags, { key: `new-${newTags.length}`, label: inputValue }];
+    }
+    this.setState({
+      newTags,
+      inputVisible: false,
+      inputValue: '',
+    });
+  };
+  editProfile=(user)=>{
+    console.log(user)
+  }
 
   render() {
     const {
@@ -125,7 +147,8 @@ class Center extends PureComponent {
                     }
                   />
                   <div className={styles.name}>{currentUser.userNickname}</div>
-                  <div>该用户很懒，暂时没有签名</div>
+                  <a onClick={()=>this.editProfile(currentUser)}><Icon type="edit" theme="outlined" /></a>
+                  <div >该用户很懒，暂时没有签名</div>
                 </div>
                 <div className={styles.detail}>
                   <p>
@@ -141,7 +164,34 @@ class Center extends PureComponent {
                     云南省昆明市
                   </p>
                 </div>
+                
                 <Divider style={{ marginTop: 16 }} dashed />
+                {/* <div className={styles.tags}>
+                    <div className={styles.tagsTitle}>标签</div>
+                    {currentUser.tags.concat(newTags).map(item => (
+                      <Tag key={item.key}>{item.label}</Tag>
+                    ))}
+                    {inputVisible && (
+                      <Input
+                        ref={this.saveInputRef}
+                        type="text"
+                        size="small"
+                        style={{ width: 78 }}
+                        value={inputValue}
+                        onChange={this.handleInputChange}
+                        onBlur={this.handleInputConfirm}
+                        onPressEnter={this.handleInputConfirm}
+                      />
+                    )}
+                    {!inputVisible && (
+                      <Tag
+                        onClick={this.showInput}
+                        style={{ background: '#fff', borderStyle: 'dashed' }}
+                      >
+                        <Icon type="plus" />
+                      </Tag>
+                    )}
+                  </div> */}
               </div>
             </Card>
           </Col>
