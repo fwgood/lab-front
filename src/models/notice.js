@@ -1,10 +1,12 @@
-import { addNotice, queryNotice as query } from '@/services/api';
+import { addNotice, queryNotice as query ,getAllComment as getComment,read as r} from '@/services/api';
+import { read } from 'fs';
 
 export default {
   namespace: 'notice',
 
   state: {
     notices: [],
+    comments:[],
   },
 
   effects: {
@@ -24,6 +26,23 @@ export default {
         payload: response,
       });
     },
+    *getAllComment({payload},{call,put}){
+      const response=yield call(getComment)
+      yield put({
+        type:'getComment',
+        payload:response
+      })
+    },
+    *read({payload},{call,put}){
+
+      yield call(r,payload)
+      const response=yield call(getComment)
+
+      yield put({
+        type:'getComment',
+        payload:response
+      })
+    }
   },
 
   reducers: {
@@ -33,5 +52,11 @@ export default {
         notices: [...payload],
       };
     },
+    getComment(state,{payload}){
+      return {
+        ...state,
+        comments:[...payload]
+      }
+    }
   },
 };

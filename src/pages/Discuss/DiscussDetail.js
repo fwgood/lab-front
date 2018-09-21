@@ -66,6 +66,7 @@ class Center extends PureComponent {
         parentId: this.props.location.state.blogId,
       },
     });
+
     // this.getData(res => {
     //   this.setState({
     //     initLoading: false,
@@ -136,11 +137,13 @@ class Center extends PureComponent {
         dataSource={this.props.blog.comments}
         renderItem={item => (
           <List.Item
-            actions={[
-              // <a onClick={() => console.log("回复")} href="#replay">
-              //   回复
-              // </a>,
-            ]}
+            actions={
+              [
+                // <a onClick={() => console.log("回复")} href="#replay">
+                //   回复
+                // </a>,
+              ]
+            }
             // extra={
             //   <div className={styles.subComment}>
             //     <div className={styles.subCommentImage}>
@@ -162,12 +165,12 @@ class Center extends PureComponent {
             <Skeleton avatar title={false} loading={item.loading} active>
               <List.Item.Meta
                 avatar={
-                  <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                  <Avatar src={item.userAvatar} />
                 }
-                // title={<a href="https://ant.design">{item.name.last}</a>}
+                title={item.userNickname}
                 description={item.blogsreviewContent}
               />
-              <div>时间 : {item.blogsreviewTime}</div>
+              <div>时间 : {moment(item.blogsreviewTime).format("YYYY-MM-DD HH:mm")}</div>
             </Skeleton>
           </List.Item>
         )}
@@ -218,6 +221,7 @@ class Center extends PureComponent {
         <div className={stylesArticles.description}>{`${content}dddddddddddddd`}</div>
       </div>
     );
+    console.log(state)
     return (
       <Card
         bordered={false}
@@ -226,9 +230,10 @@ class Center extends PureComponent {
       >
         <Row style={{ marginTop: 15, marginBottom: 0 }}>
           <span>
-            <Tag>machine learning</Tag>
+            {/* <Tag>machine learning</Tag>
             <Tag>julia</Tag>
-            <Tag>班级2</Tag>
+            <Tag>班级2</Tag> */}
+            {JSON.parse(state.blogTag).map(e=>(<Tag>{e.label}</Tag>))}
           </span>
         </Row>
         <Row className={styles.listContent}>
@@ -244,9 +249,19 @@ class Center extends PureComponent {
           </div>
         </Row>
         <Row style={{ marginTop: 15 }}>
-          <IconText type="star-o" text={this.state.blog.star} />
-          <Divider type="vertical" className={styles.divid} />
-          <IconText type="like-o" text={this.state.blog.like} />
+          <a
+          onClick={() => {
+            this.props.dispatch({
+              type: 'blog/star',
+              payload: {
+                blogId: state.blogId,
+                op: 1,
+              },
+            });
+            }}
+            >
+            <IconText type="like-o" text={state.blogCount} />
+          </a>
           <Divider type="vertical" className={styles.divid} />
           <a
             onClick={() => {
@@ -255,7 +270,7 @@ class Center extends PureComponent {
               });
             }}
           >
-            <IconText type="message" text={this.state.blog.message} />
+            <IconText type="message" text={this.props.blog.comments.length} />
           </a>
         </Row>
         <Row>

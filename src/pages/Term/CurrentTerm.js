@@ -58,7 +58,9 @@ class CardList extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'course/fetchMyCourse',
-      payload: {},
+      payload: {
+ 
+      },
     });
   }
 

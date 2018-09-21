@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Form, Card, Select, List, Tag, Icon, Avatar, Row, Col, Button } from 'antd';
+import { Form, Card, Select, List, Tag, Icon, Avatar, Row, Col, Button ,Upload} from 'antd';
 
 import TagSelect from '@/components/TagSelect';
 import StandardFormRow from '@/components/StandardFormRow';
@@ -103,20 +103,20 @@ class SearchList extends Component {
       },
     };
 
-    const loadMore =
-      list.length > 0 ? (
-        <div style={{ textAlign: 'center', marginTop: 16 }}>
-          <Button onClick={this.fetchMore} style={{ paddingLeft: 48, paddingRight: 48 }}>
-            {loading ? (
-              <span>
-                <Icon type="loading" /> 加载中...
-              </span>
-            ) : (
-              '加载更多'
-            )}
-          </Button>
-        </div>
-      ) : null;
+    // const loadMore =
+    //   list.length > 0 ? (
+    //     <div style={{ textAlign: 'center', marginTop: 16 }}>
+    //       <Button onClick={this.fetchMore} style={{ paddingLeft: 48, paddingRight: 48 }}>
+    //         {loading ? (
+    //           <span>
+    //             <Icon type="loading" /> 加载中...
+    //           </span>
+    //         ) : (
+    //           '加载更多'
+    //         )}
+    //       </Button>
+    //     </div>
+    //   ) : null;
 
     return (
       <Fragment>
@@ -210,7 +210,7 @@ class SearchList extends Component {
             loading={list.length === 0 ? loading : false}
             rowKey="id"
             itemLayout="vertical"
-            loadMore={loadMore}
+            // loadMore={loadMore}
             dataSource={list}
             renderItem={item => (
               <List.Item

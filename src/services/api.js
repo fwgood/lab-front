@@ -1,9 +1,9 @@
 import { stringify } from 'qs';
 import request from '@/utils/request';
-import Axios from 'axios';
+import Axios from 'Axios';
 import { message } from 'antd';
 
-const axios = Axios.interceptors.response.use(
+Axios.interceptors.response.use(
   response => response,
   error => {
     if (error.response) {
@@ -160,10 +160,10 @@ export async function queryAllCourse() {
     method: 'POST',
   });
 }
-export async function queryMyCourse() {
+export async function queryMyCourse(params) {
   return request('http://lab.lli.fun/api/v1/course/courseList', {
     method: 'POST',
-    body: {},
+    body:params
   });
 }
 export async function changeCourseState({ courseId, courseState }) {
@@ -254,7 +254,7 @@ export async function queryBlog(params) {
     body: {
       page: params.page,
       pageSize: params.pageSize,
-      sort: 'asc',
+      sort: 'desc',
     },
   });
 }
@@ -264,7 +264,7 @@ export async function queryMyBlog(params) {
     body: {
       page: params.page,
       pageSize: params.pageSize,
-      sort: 'asc',
+      sort: 'desc',
     },
   });
 }
@@ -274,7 +274,7 @@ export async function searchBlog(params) {
     body: {
       page: params.page,
       pageSize: params.pageSize,
-      sort: 'asc',
+      sort: 'desc',
     },
   });
 }
@@ -327,4 +327,37 @@ export async function modifyUser(params) {
       method: 'GET',
     }
   );
+}
+export async function getNews(params){
+  return request(`http://lab.lli.fun/lab/api/v1/blog/newsList`,{
+    method:'POST',
+    body:params
+  })
+}
+export async function addNews(params){
+  return request(`http://lab.lli.fun/lab/api/v1/blog/publishNews`,{
+    method:'POST',
+    body:params
+  })
+}
+export async function modifyStar(params){
+  return request(`http://lab.lli.fun/lab/api/v1/blog/addBlogCount?blogId=${params.blogId}&op=${params.op}`,{
+    method:'POST'
+  })
+}
+export async function getAllComment(params){
+  return request(`http://lab.lli.fun/lab/api/v1/blog/getAllComments`,{
+    method:'POST'
+  })
+}
+export async function read(params){
+  return request(`http://lab.lli.fun/lab/api/v1/blog/updateIsRead?blogsReviewId=${params.blogsReviewId}`,{
+    method:'POST'
+  })
+}
+export async function updateUser(params){
+  return request(`http://lab.lli.fun/lab/api/v1/user/updateUser`,{
+    method:'POST',
+    body:params
+  })
 }

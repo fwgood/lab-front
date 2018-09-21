@@ -34,11 +34,11 @@ export default {
       const response = yield call(queryAllCourse);
       yield put({
         type: 'queryAll',
-        payload: response.list,
+        payload: response,
       });
     },
     *fetchMyCourse({ payload }, { call, put }) {
-      const response = yield call(queryMyCourse);
+      const response = yield call(queryMyCourse,payload);
       yield put({
         type: 'queryAll',
         payload: response.list,
@@ -49,11 +49,11 @@ export default {
       const response = yield call(queryAllCourse);
       yield put({
         type: 'queryAll',
-        payload: response.list,
+        payload: response,
       });
       yield put({
         type: 'queryAll',
-        payload: response.list,
+        payload: response,
       });
     },
     *deleteCourse({ payload }, { call, put }) {
@@ -61,7 +61,7 @@ export default {
       const response = yield call(queryAllCourse);
       yield put({
         type: 'queryAll',
-        payload: response.list,
+        payload: response,
       });
     },
     *searchCourse({ payload }, { call, put }) {

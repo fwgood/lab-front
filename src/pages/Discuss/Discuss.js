@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import moment from 'moment';
 import { connect } from 'dva';
-import { Input, Form, Card, Select, List, Tag, Icon, Avatar, Button, message } from 'antd';
+import { Input, Form, Card, Select, List, Tag, Icon, Avatar, Button, message, Badge } from 'antd';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import SimpleMDE from 'react-simplemde-editor';
 import 'simplemde/dist/simplemde.min.css';
@@ -39,7 +39,7 @@ class SearchList extends Component {
     inputValue: '',
   };
 
-  componentDidMount() {
+  componentWillMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'blog/queryBlog',
@@ -47,15 +47,18 @@ class SearchList extends Component {
         courseId: 0,
         page: 1,
         pageSize: 20,
+        sort: 'desc',
       },
     });
   }
+
   fetchMore = () => {
     const { dispatch } = this.props;
     dispatch({
       type: 'list/appendFetch',
       payload: {
         count: pageSize,
+        sort: 'desc',
       },
     });
   };
@@ -65,10 +68,11 @@ class SearchList extends Component {
     this.props.dispatch({
       type: 'blog/search',
       payload: {
-        param:value,
+        param: value,
         courseId: 0,
         page: 1,
         pageSize: 20,
+        sort: 'desc',
       },
     });
   };
@@ -88,9 +92,22 @@ class SearchList extends Component {
       title: e.target.value,
     });
   };
-    handleInputChange = e => {
+
+  handleInputChange = e => {
     this.setState({ inputValue: e.target.value });
   };
+
+  handleStar = e => () => {
+    console.log(e);
+    this.props.dispatch({
+      type: 'blog/star',
+      payload: {
+        blogId: e,
+        op: 1,
+      },
+    });
+  };
+
   handleInputConfirm = () => {
     const { state } = this;
     const { inputValue } = state;
@@ -104,13 +121,16 @@ class SearchList extends Component {
       inputValue: '',
     });
   };
+
   showInput = () => {
     this.setState({ inputVisible: true }, () => this.input.focus());
   };
+
   saveInputRef = input => {
     this.input = input;
-    console.log(this.state.newTags)
+    console.log(this.state.newTags);
   };
+
   renderMarkDown = () => (
     <div>
       <Card
@@ -125,39 +145,33 @@ class SearchList extends Component {
         />
 
         <div className={styles.tags}>
-                    <span className={styles.tagsTitle} style={{margin:10}}>标签</span>
-                    {this.state.newTags.map(item => (
-                      <Tag key={item.key}>{item.label}</Tag>
-                    ))}
-                    {this.state.inputVisible && (
-                      <Input
-                        ref={this.saveInputRef}
-                        type="text"
-                        size="small"
-                        style={{ width: 78 }}
-                        value={this.state.inputValue}
-                        onChange={this.handleInputChange}
-                        onBlur={this.handleInputConfirm}
-                        onPressEnter={this.handleInputConfirm}
-                      />
-                    )}
-                    {!this.state.inputVisible && (
-                      <Tag
-                        onClick={this.showInput}
-                        style={{ background: '#fff', borderStyle: 'dashed' }}
-                      >
-                        <Icon type="plus" />
-                      </Tag>
-                    )}
-                  </div>
-        
+          <span className={styles.tagsTitle} style={{ margin: 10 }}>
+            标签
+          </span>
+          {this.state.newTags.map(item => (
+            <Tag key={item.key}>{item.label}</Tag>
+          ))}
+          {this.state.inputVisible && (
+            <Input
+              ref={this.saveInputRef}
+              type="text"
+              size="small"
+              style={{ width: 78 }}
+              value={this.state.inputValue}
+              onChange={this.handleInputChange}
+              onBlur={this.handleInputConfirm}
+              onPressEnter={this.handleInputConfirm}
+            />
+          )}
+          {!this.state.inputVisible && (
+            <Tag onClick={this.showInput} style={{ background: '#fff', borderStyle: 'dashed' }}>
+              <Icon type="plus" />
+            </Tag>
+          )}
+        </div>
+
         <div style={{ marginTop: 10 }}>
           <SimpleMDE onChange={this.handleChange} />
-          {/* <SimpleMDE
-  value={this.state.textValue}
-  onChange={this.handleChange}
-  extraKeys={extraKeys}
-/> */}
         </div>
         <div style={{ textAlign: 'right' }}>
           <Button onClick={this.publishDiscuss} type="primary" size="large" ghost>
@@ -183,6 +197,7 @@ class SearchList extends Component {
           blogContent: this.state.mdeValue,
           blogTime: moment(new Date()).format('YYYY-MM-DD HH:mm'),
           courseId: '0',
+          blogTag: JSON.stringify(this.state.newTags),
         },
       });
       this.setState({
@@ -212,25 +227,10 @@ class SearchList extends Component {
         <div className={styles.extra}>
           <Avatar size="small">{userNickname}</Avatar>
           {userNickname} 发布于 {blogTime}
-          <em>{}</em>
+          {/* <em>{}</em> */}
         </div>
       </div>
     );
-
-    const loadMore =
-      blogs.length > 0 ? (
-        <div style={{ textAlign: 'center', marginTop: 16 }}>
-          <Button onClick={this.fetchMore} style={{ paddingLeft: 48, paddingRight: 48 }}>
-            {loading ? (
-              <span>
-                <Icon type="loading" /> 加载中...
-              </span>
-            ) : (
-              '加载更多'
-            )}
-          </Button>
-        </div>
-      ) : null;
 
     const mainSearch = (
       <div style={{ textAlign: 'center' }}>
@@ -265,21 +265,24 @@ class SearchList extends Component {
               loading={blogs.length === 0 ? loading : false}
               rowKey="id"
               itemLayout="vertical"
-              loadMore={loadMore}
+              // loadMore={loadMore}
               dataSource={blogs}
               renderItem={item => (
                 <List.Item
                   key={item.id}
                   actions={[
-                    <IconText type="star-o" text={item.star} />,
-                    <IconText type="like-o" text={item.like} />,
-                    <a
-                      onClick={() => {
-                        console.log('点赞');
-                      }}
-                    >
-                      <IconText type="message" text={item.message} />
+                    // <IconText type="star-o" text={item.star} />,
+                    <a onClick={this.handleStar(item.blogId)}>
+                      <IconText type="like-o" text={item.like} />
+                      {item.blogCount}
                     </a>,
+                    // <a
+                    //   onClick={() => {
+                    //     console.log('点赞');
+                    //   }}
+                    // >
+                    //   <IconText type="message" text={item.message} />
+                    // </a>,
                   ]}
                   extra={<div className={styles.listItemExtra} />}
                 >
@@ -287,9 +290,7 @@ class SearchList extends Component {
                     title={<a className={styles.listItemMetaTitle}>{item.blogTitle}</a>}
                     description={
                       <span>
-                        <Tag>世界历史</Tag>
-                        <Tag>人文</Tag>
-                        <Tag>ssss</Tag>
+                        {JSON.parse(item.blogTag).map(e => <Tag>{e.label}</Tag>)}
                       </span>
                     }
                   />

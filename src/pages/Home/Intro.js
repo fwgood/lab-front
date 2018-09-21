@@ -6,16 +6,16 @@ import { connect } from 'dva';
 import { getAuth } from '@/utils/auth';
 import moment from 'moment';
 import styles from './Intro.less';
-
 const FormItem = Form.Item;
 const { TextArea } = Input;
 const formItemLayout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 15 },
 };
-@connect(({ login, loading, notice }) => ({
+@connect(({ login, loading, notice,news }) => ({
   login,
   notice,
+  news,
   loading: loading.models.notice,
 }))
 @Form.create()
@@ -29,28 +29,6 @@ class Center extends PureComponent {
       title: '',
       content: '',
     },
-    newsList: [
-      {
-        title: '先富带后富，脱贫致富路-软件学院三下乡团队汇报',
-        content: `2018年8月20日，云南大学的三下乡团队就澄江县"改革开放四十周年"主题调研继续进行，所有成员要了解澄江的本土企业发展状况，体味改革开放对于一个整体区域经济发展的作用，感受新时代的发展风貌。因此我们联系到云南大型综合型企业云南再峰集团，以再峰集团在澄江的发展为例映射澄江县经济的发展。`,
-        key: 1,
-      },
-      {
-        title: '先富带后富，脱贫致富路-软件学院三下乡团队汇报',
-        content: `2018年8月20日，云南大学的三下乡团队就澄江县"改革开放四十周年"主题调研继续进行，所有成员要了解澄江的本土企业发展状况，体味改革开放对于一个整体区域经济发展的作用，感受新时代的发展风貌。因此我们联系到云南大型综合型企业云南再峰集团，以再峰集团在澄江的发展为例映射澄江县经济的发展。`,
-        key: 2,
-      },
-      {
-        title: '先富带后富，脱贫致富路-软件学院三下乡团队汇报',
-        content: `2018年8月20日，云南大学的三下乡团队就澄江县"改革开放四十周年"主题调研继续进行，所有成员要了解澄江的本土企业发展状况，体味改革开放对于一个整体区域经济发展的作用，感受新时代的发展风貌。因此我们联系到云南大型综合型企业云南再峰集团，以再峰集团在澄江的发展为例映射澄江县经济的发展。`,
-        key: 3,
-      },
-      {
-        title: '先富带后富，脱贫致富路-软件学院三下乡团队汇报',
-        content: `2018年8月20日，云南大学的三下乡团队就澄江县"改革开放四十周年"主题调研继续进行，所有成员要了解澄江的本土企业发展状况，体味改革开放对于一个整体区域经济发展的作用，感受新时代的发展风貌。因此我们联系到云南大型综合型企业云南再峰集团，以再峰集团在澄江的发展为例映射澄江县经济的发展。`,
-        key: 4,
-      },
-    ],
   };
 
   showModal = () => {
@@ -58,7 +36,16 @@ class Center extends PureComponent {
       infoVisible: true,
     });
   };
-
+componentDidMount=()=>{
+  this.props.dispatch({
+    type:'news/queryNews',
+    payload:{
+      "page": 1,
+      "pageSize": 20,
+      "sort": "desc"
+    }
+  })
+}
   handleSubmit = e => {
     const { dispatch, form } = this.props;
     e.preventDefault();
@@ -66,13 +53,12 @@ class Center extends PureComponent {
       if (!err) {
         const { dispatch } = this.props;
         dispatch({
-          type: 'notice/addNotice',
+          type: 'news/addNews',
           payload: {
             ...values,
-            announncementCourseId: 0,
-            announncementType: 'string',
-            announncementTime: moment(new Date()).format('YYYY-MM-D H-m'),
+            newsTime:new Date().getTime(),
           },
+
         });
         this.setState({
           infoVisible: false,
@@ -125,7 +111,7 @@ class Center extends PureComponent {
     return (
       <div>
         <Modal
-          title="公告"
+          title="新闻"
           visible={this.state.infoVisible}
           footer={null}
           onOk={this.handleInfoOk}
@@ -133,8 +119,8 @@ class Center extends PureComponent {
           onCancel={this.handleInfoCancel}
         >
           <Form onSubmit={this.handleSubmit}>
-            <FormItem {...formItemLayout} label="标题">
-              {getFieldDecorator('announncementTitle', {
+            <FormItem {...formItemLayout} label="新闻">
+              {getFieldDecorator('newsTitle', {
                 rules: [
                   {
                     message: '请输入标题',
@@ -143,7 +129,7 @@ class Center extends PureComponent {
               })(<Input />)}
             </FormItem>
             <FormItem {...formItemLayout} label="公告内容">
-              {getFieldDecorator('announncementContent', {
+              {getFieldDecorator('newsContent', {
                 rules: [
                   {
                     message: '请输入内容',
@@ -165,6 +151,7 @@ class Center extends PureComponent {
                   this.setState({
                     infoVisible: false,
                   });
+
                 }}
               >
                 取消
@@ -177,6 +164,7 @@ class Center extends PureComponent {
   }
 
   render() {
+    console.log(this.props.news.news)
     return (
       <GridContent className={styles.userCenter}>
         <Row gutter={24}>
@@ -223,26 +211,27 @@ class Center extends PureComponent {
                   style={getAuth().role == '2' ? { visibility: 'hidden' } : {}}
                   onClick={() => this.showModal()}
                 >
-                  发布公告
+                  发布新闻
                 </a>
               }
             >
               {this.renderInfo()}
               <span>
                 <Row>
-                  {this.state.newsList.map(n => (
+                  {this.props.news.news.map(n => (
                     <Col lg={24} md={24} key={n.key}>
                       <Card
-                        title={n.title}
-                        extra={
-                          <Button onClick={this.handleMore(n)} type="dashed">
-                            More
-                          </Button>
-                        }
+                        title={"标题："+n.newsTitle}
+                        // extra={
+                        //   <Button onClick={this.handleMore(n)} type="dashed">
+                        //     More
+                        //   </Button>
+                        // }
                         style={{ width: '100%', marginTop: 20 }}
                         hoverable
                       >
-                        <p>{n.content}</p>
+                        <p>{n.newsContent}</p>
+                        <p style={{float:'right',marginTop:20}}>{"发布人："+n.newsSendname + "　发布日期："+moment.unix(parseInt(n.newsTime)/1000).format('YYYY-MM-DD HH:mm')　}</p>
                       </Card>
                     </Col>
                   ))}
@@ -250,14 +239,14 @@ class Center extends PureComponent {
               </span>
             </Card>
           </Col>
-          <Modal
+          {/* <Modal
             title={this.state.currentNews.title}
             visible={this.state.visible}
-            onOk={this.handleOk}
+            footer={null}
             onCancel={this.handleCancle}
           >
-            <p>{this.state.currentNews.content}</p>
-          </Modal>
+            <p>{this.state.currentNews.newsContent}</p>
+          </Modal> */}
         </Row>
       </GridContent>
     );

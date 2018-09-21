@@ -26,6 +26,25 @@ class HeaderView extends PureComponent {
 
   componentDidMount() {
     document.addEventListener('scroll', this.handScroll, { passive: true });
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'notice/queryNotice',
+      payload: {},
+    });
+    dispatch({
+      type: 'notice/getAllComment',
+      payload: {},
+    });
+    setInterval(() => {
+      dispatch({
+        type: 'notice/queryNotice',
+        payload: {},
+      });
+      dispatch({
+        type: 'notice/getAllComment',
+        payload: {},
+      });
+    },10000)
   }
 
   componentWillUnmount() {
@@ -78,9 +97,15 @@ class HeaderView extends PureComponent {
         type: 'notice/queryNotice',
         payload: {},
       });
+      dispatch({
+        type: 'notice/getAllComment',
+        payload: {},
+      });
     }
   };
+componentWillMount(){
 
+}
   handScroll = () => {
     const { autoHideHeader } = this.props;
     const { visible } = this.state;

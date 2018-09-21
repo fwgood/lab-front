@@ -12,6 +12,7 @@ import { connect } from 'dva';
   loading: loading.models.notice,
 }))
 export default class GlobalHeaderRight extends PureComponent {
+
   getNoticeData() {
     const {
       notice: { notices },
@@ -49,9 +50,47 @@ export default class GlobalHeaderRight extends PureComponent {
       }
       return newNotice;
     });
-    return groupBy(newNotices, 'announncementType');
+    return groupBy(newNotices, '');
   }
-
+  getCommentData() {
+    const {
+      notice: { comments:notices},
+    } = this.props;
+    if (notices.length === 0) {
+      return {};
+    }
+    const newNotices = notices.map(notice => {
+      const newNotice = { ...notice };
+      if (newNotice.blogsreviewTime) {
+        newNotice.datetime = moment(notice.blogsreviewTime).fromNow();
+      }
+      if (newNotice.announncementTitle) {
+        newNotice.title = newNotice.announncementTitle;
+      }
+      if (newNotice.announncementId) {
+        newNotice.key = newNotice.announncementId;
+      }
+      if (newNotice.blogsreviewContent) {
+        newNotice.description = newNotice.blogsreviewContent;
+      }
+      newNotice.avatar = <Avatar>R</Avatar>;
+      if (newNotice.blogsreviewContent && newNotice.isRead) {
+        const color = {
+          '1': '',
+          // processing: 'blue',
+          '0': 'red',
+          // doing: 'gold',
+        }[newNotice.isRead];
+        newNotice.extra = (
+          <Tag color={color} style={{ marginRight: 0 }}>
+            {newNotice.isRead=='0'?"未读":"已读"}
+          </Tag>
+        );
+      }
+      return newNotice;
+    });
+    return groupBy(newNotices, '');
+  }
   changLang = () => {
     const locale = getLocale();
     if (!locale || locale === 'zh-CN') {
@@ -92,6 +131,8 @@ export default class GlobalHeaderRight extends PureComponent {
       </Menu>
     );
     const noticeData = this.getNoticeData();
+    const commentData = this.getCommentData();
+
     let className = styles.right;
     if (theme === 'dark') {
       className = `${styles.right}  ${styles.dark}`;
@@ -100,9 +141,15 @@ export default class GlobalHeaderRight extends PureComponent {
       <div className={className}>
         <NoticeIcon
           className={styles.action}
-          count={currentUser.notifyCount}
+          count={this.props.notice.comments.filter(e=>e.isRead=='0').length}
           onItemClick={(item, tabProps) => {
-            console.log(item, tabProps); // eslint-disable-line
+            console.log(item)
+            this.props.dispatch({
+              type:'notice/read',
+              payload:{
+                blogsReviewId:item.blogsreviewId
+              }
+            }) // eslint-disable-line
           }}
           onClear={onNoticeClear}
           onPopupVisibleChange={onNoticeVisibleChange}
@@ -110,12 +157,20 @@ export default class GlobalHeaderRight extends PureComponent {
           popupAlign={{ offset: [20, -16] }}
         >
           <NoticeIcon.Tab
-            list={noticeData['string']}
+            list={noticeData[undefined]}
+            
+            title="通知"
+            emptyText="你已查看所有通知"
+            emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
+          />
+                    <NoticeIcon.Tab
+            list={commentData[undefined]}
             title="通知"
             emptyText="你已查看所有通知"
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/wAhyIChODzsoKIOBHcBk.svg"
           />
         </NoticeIcon>
+        
         {currentUser.userName ? (
           <Dropdown overlay={menu}>
             <span className={`${styles.action} ${styles.account}`}>

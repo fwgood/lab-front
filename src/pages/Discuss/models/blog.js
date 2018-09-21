@@ -7,6 +7,7 @@ import {
   addComment as addC,
   getComment as getC,
   searchBlog,
+  modifyStar,
 } from '@/services/api';
 
 export default {
@@ -19,8 +20,8 @@ export default {
   },
 
   effects: {
+    isPress: false,
     *queryBlog({ payload }, { call, put }) {
-      console.log(payload);
       const response = yield call(query, payload);
       yield put({
         type: 'fetchBlog',
@@ -35,8 +36,8 @@ export default {
       });
     },
     *addBlog({ payload }, { call, put }) {
+      yield call(add,payload)
       console.log(payload);
-      yield call(add, payload);
       const response = yield call(query, payload);
       yield put({
         type: 'fetchBlog',
@@ -60,13 +61,21 @@ export default {
         payload: response,
       });
     },
-    *search({payload},{call,put}){
-      const response=yield call(searchBlog,payload)
+    *search({ payload }, { call, put }) {
+      const response = yield call(searchBlog, payload);
       yield put({
         type: 'fetchBlog',
         payload: response,
       });
-    }
+    },
+    *star({ payload }, { call, put }) {
+        yield call(modifyStar, payload);
+
+        yield put({
+          type: 'changeStar',
+          payload,
+        });
+      }
   },
 
   reducers: {
@@ -81,6 +90,12 @@ export default {
         ...state,
         comments: payload,
       };
+    },
+    changeStar(state, { payload }) {
+      const old = { ...state };
+      const index = old.blogs.findIndex(e => e.blogId == payload.blogId);
+      old.blogs[index].blogCount++;
+      return old;
     },
   },
 };
