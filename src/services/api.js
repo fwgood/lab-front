@@ -2,6 +2,7 @@ import { stringify } from 'qs';
 import request from '@/utils/request';
 import Axios from 'Axios';
 import { message } from 'antd';
+import { getAuth } from '@/utils/auth';
 
 Axios.interceptors.response.use(
   response => response,
@@ -163,7 +164,7 @@ export async function queryAllCourse() {
 export async function queryMyCourse(params) {
   return request('http://lab.lli.fun/api/v1/course/courseList', {
     method: 'POST',
-    body:params
+    body:{}
   });
 }
 export async function changeCourseState({ courseId, courseState }) {
@@ -214,6 +215,9 @@ export async function addNotice(params) {
   });
 }
 export async function queryNotice(params) {
+  if(!getAuth().token){
+    return
+  }
   return request(`http://lab.lli.fun/lab/api/v1/anno/annoList`, {
     method: 'GET',
   });
@@ -346,6 +350,9 @@ export async function modifyStar(params){
   })
 }
 export async function getAllComment(params){
+  if(!getAuth().token){
+    return
+  }
   return request(`http://lab.lli.fun/lab/api/v1/blog/getAllComments`,{
     method:'POST'
   })

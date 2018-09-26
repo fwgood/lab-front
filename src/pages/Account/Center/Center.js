@@ -117,10 +117,11 @@ class Center extends PureComponent {
                 </a>
               }
               description={
-<span>
-{JSON.parse(item.blogTag).map(e=>(<Tag>{e.label}</Tag>))}
-
-</span>
+                <span>
+                  {JSON.parse(item.blogTag).map(e => (
+                    <Tag>{e.label}</Tag>
+                  ))}
+                </span>
               }
             />
             <MarkDown source={item.blogContent} />
@@ -163,7 +164,9 @@ class Center extends PureComponent {
         data.userSex = values.userSex;
       }
       if (values.upload && values.upload[0]) {
-        data.userAvatar = `http://file.lli.fun/${  values.upload[values.upload.length-1].response.key}`;
+        data.userAvatar = `http://file.lli.fun/${
+          values.upload[values.upload.length - 1].response.key
+        }`;
       }
       this.props.dispatch({
         type: 'user/update',
@@ -332,9 +335,11 @@ class Center extends PureComponent {
               title={<strong>我的简介</strong>}
             >
               <p>
-                电话：{currentUser.userPhone}
+                电话：
+                {currentUser.userPhone}
                 <Divider>萌萌哒的分割线</Divider>
-                性别：{currentUser.userSex}
+                性别：
+                {currentUser.userSex}
               </p>
             </Card>
             <Card style={{ marginTop: 10 }}>{this.renderMyDiscuss()}</Card>

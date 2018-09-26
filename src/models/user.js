@@ -24,14 +24,14 @@ export default {
         payload: response,
       });
     },
-    *update({payload},{call,put}){
-      yield call(updateUser,payload)
+    *update({ payload }, { call, put }) {
+      yield call(updateUser, payload);
       const response = yield call(queryCurrent);
       yield put({
         type: 'saveCurrentUser',
         payload: response,
       });
-    }
+    },
   },
 
   reducers: {

@@ -40,16 +40,18 @@ export default {
         }
         window.location.reload();
         if (redirect) {
-          const redirectUrlParams = new URL(redirect);
-          if (redirectUrlParams.origin === urlParams.origin) {
-            redirect = redirect.substr(urlParams.origin.length);
-            if (redirect.startsWith('/#')) {
-              redirect = redirect.substr(2);
-            }
-          } else {
-            window.location.href = redirect;
-            return;
-          }
+          // const redirectUrlParams = new URL(redirect);
+          // if (redirectUrlParams.origin === urlParams.origin) {
+          //   redirect = redirect.substr(urlParams.origin.length);
+          //   if (redirect.startsWith('/#')) {
+          //     redirect = redirect.substr(2);
+          //   }
+          // } else {
+          //   window.location.href = redirect;
+          //   return;
+          // }
+          yield put(routerRedux.replace('/'));
+return
         }
         console.log(response);
         yield put(routerRedux.replace(redirect || '/'));

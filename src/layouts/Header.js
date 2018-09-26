@@ -34,7 +34,7 @@ class HeaderView extends PureComponent {
     dispatch({
       type: 'notice/getAllComment',
       payload: {},
-    });
+    });   
     setInterval(() => {
       dispatch({
         type: 'notice/queryNotice',

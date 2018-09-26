@@ -201,7 +201,7 @@ class CardList extends PureComponent {
       },
     });
     this.setState({
-      passVisible: 0,
+      passVisible: false,
     });
   };
 

@@ -81,6 +81,14 @@ export default {
         type: 'queryAll',
         payload: response.list,
       });
+      const r = yield call(search);
+      yield call(() => {
+        console.log(response);
+      });
+      yield put({
+        type: 'search',
+        payload: r.list,
+      });
     },
     *quitCourse({ payload }, { call, put }) {
       yield call(quit, payload);
