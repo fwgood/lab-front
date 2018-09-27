@@ -205,7 +205,7 @@ class BasicList extends PureComponent {
     const paginationProps = {
       showSizeChanger: true,
       showQuickJumper: true,
-      pageSize: 20,
+      pageSize: 50,
       total: 50,
     };
 

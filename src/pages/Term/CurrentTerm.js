@@ -210,7 +210,11 @@ class CardList extends PureComponent {
       pass: e.target.value,
     });
   };
-
+  handleBlur=e=>{
+    this.setState({
+      passVisible:0
+    })
+  }
   renderInfo() {
     const { getFieldDecorator } = this.props.form;
     return (
@@ -301,6 +305,7 @@ class CardList extends PureComponent {
                     value={this.state.pass}
                     onChange={this.handlePassChange}
                     style={{ width: 120 }}
+                    onBlur={this.handleBlur}
                   />
                   <Button onClick={this.handlePass}>选课</Button>
                 </div>
